@@ -25,7 +25,7 @@ export default function CultureLessonScreen() {
   const isCompleted = completedLessons[lesson.id];
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 32 }}>
       <View style={styles.header}>
         <Text style={styles.title}>{lesson.title}</Text>
         <Text style={styles.titleKorean}>{lesson.titleKorean}</Text>

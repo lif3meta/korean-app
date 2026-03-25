@@ -178,13 +178,13 @@ export default function SleepScreen() {
           toValue: 1.15,
           duration: 3000,
           easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
+          useNativeDriver: false,
         }),
         Animated.timing(pulseAnim, {
           toValue: 1,
           duration: 3000,
           easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
+          useNativeDriver: false,
         }),
       ])
     );
@@ -410,7 +410,7 @@ export default function SleepScreen() {
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
           </TouchableOpacity>
-          <Text style={styles.setupTitle}>Sleep Learning</Text>
+          <Text style={styles.setupTitle}>Parrot Learning</Text>
           <View style={{ width: 40 }} />
         </View>
 
@@ -421,7 +421,7 @@ export default function SleepScreen() {
               <Ionicons name="moon" size={40} color="#7C4DFF" />
             </View>
             <Text style={styles.setupSubtitle}>
-              Learn Korean while you rest. Words are spoken in Korean then English, repeated 3 times each.
+              Learn Korean on repeat. Words are spoken in Korean then English, repeated 3 times each.
             </Text>
           </View>
 
@@ -518,7 +518,7 @@ export default function SleepScreen() {
               style={styles.startButton}
             >
               <Ionicons name="play" size={28} color="#fff" />
-              <Text style={styles.startText}>Start Sleep Learning</Text>
+              <Text style={styles.startText}>Start Parrot Learning</Text>
             </LinearGradient>
           </TouchableOpacity>
         </ScrollView>

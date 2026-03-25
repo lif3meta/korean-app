@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useRef, useEffect, useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { setAudioWebViewRef } from '@/lib/audio';
@@ -19,11 +19,10 @@ export function useAudio() {
 
 export function AudioProvider({ children }: { children: React.ReactNode }) {
   const webViewRef = useRef<WebView>(null);
+  const [webViewReady, setWebViewReady] = useState(false);
 
+  // Cleanup on unmount
   useEffect(() => {
-    // Register the webview ref globally in audio.ts so all existing
-    // speakKorean/speakEnglish calls automatically use Pollinations
-    setAudioWebViewRef(webViewRef.current);
     return () => {
       setAudioWebViewRef(null);
     };
@@ -31,7 +30,17 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
   const handleWebViewRef = useCallback((ref: WebView | null) => {
     (webViewRef as React.MutableRefObject<WebView | null>).current = ref;
-    setAudioWebViewRef(ref);
+    // Only register if we have a valid ref; onLoad will re-register when ready
+    if (ref) {
+      console.log('[AudioProvider] WebView ref attached');
+    }
+  }, []);
+
+  const handleWebViewLoad = useCallback(() => {
+    console.log('[AudioProvider] WebView loaded and ready');
+    setWebViewReady(true);
+    // Register the ref now that the WebView is fully loaded
+    setAudioWebViewRef(webViewRef.current);
   }, []);
 
   const playAudio = useCallback((text: string, language?: 'ko' | 'en', voice?: string) => {
@@ -66,16 +75,19 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AudioContext.Provider value={{ playAudio, stopAudio }}>
-        <View style={{ flex: 1 }}>
-          {children}
-          <WebView
-            ref={handleWebViewRef}
-            source={{ html: '<html><body></body></html>' }}
-            style={{ width: 0, height: 0, position: 'absolute', top: 0, left: 0, opacity: 0 }}
-            javaScriptEnabled
-            mediaPlaybackRequiresUserAction={false}
-          />
-        </View>
+      {children}
+      <View style={{ height: 0, width: 0, opacity: 0, overflow: 'hidden', position: 'absolute' }}>
+        <WebView
+          ref={handleWebViewRef}
+          source={{ html: '<html><body><script>window.onerror=function(m){window.ReactNativeWebView.postMessage("error:"+m)}</script></body></html>' }}
+          style={{ width: 1, height: 1 }}
+          javaScriptEnabled
+          mediaPlaybackRequiresUserAction={false}
+          allowsInlineMediaPlayback={true}
+          onLoad={handleWebViewLoad}
+          onError={(e) => console.warn('[AudioProvider] WebView error:', e.nativeEvent)}
+        />
+      </View>
     </AudioContext.Provider>
   );
 }

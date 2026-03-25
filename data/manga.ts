@@ -2502,6 +2502,223 @@ export const mangaSeries: MangaSeries[] = [
           },
         ],
       },
+      // ─────────────────────────────────────────────
+      // Chapter 2: The Secret Message (Level 2)
+      // ─────────────────────────────────────────────
+      {
+        id: 'det-ch2-secret-message',
+        title: 'The Secret Message',
+        titleKorean: '비밀 메시지',
+        level: 2,
+        description: 'Minsu follows the clue from the mysterious paper and discovers a hidden message.',
+        panels: [
+          {
+            id: 'det-ch2-p1',
+            imagePrompt: 'dark moody manga style illustration of a Korean teenage boy detective examining a crumpled piece of paper under a desk lamp in a dim library, dramatic shadows, magnifying glass, stacks of books around him, noir detective atmosphere',
+            narration: '민수는 단서를 조사합니다...',
+            narrationEnglish: 'Minsu investigates the clue...',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '이 종이에 숫자가 있어.',
+                romanization: 'i jongie sutjaga isseo.',
+                english: 'There are numbers on this paper.',
+                words: [
+                  { korean: '이', english: 'this' },
+                  { korean: '종이에', english: 'on paper' },
+                  { korean: '숫자가', english: 'numbers (subject)' },
+                  { korean: '있어', english: 'there are' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'det-ch2-p2',
+            imagePrompt: 'dark moody manga style illustration of a Korean boy and girl whispering in a school library, bookshelves towering behind them, dim overhead lighting, mystery atmosphere, one points at a book',
+            dialogue: [
+              {
+                speaker: '지영',
+                speakerEnglish: 'Jiyoung',
+                korean: '이 숫자는 뭘까? 비밀번호?',
+                romanization: 'i sutjaneun mwolkka? bimilbeonho?',
+                english: 'What are these numbers? A password?',
+                words: [
+                  { korean: '이', english: 'this' },
+                  { korean: '숫자는', english: 'numbers (topic)' },
+                  { korean: '뭘까', english: 'what could it be' },
+                  { korean: '비밀번호', english: 'password' },
+                ],
+                position: 'right',
+              },
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '아니, 사물함 번호 같아.',
+                romanization: 'ani, samulham beonho gata.',
+                english: 'No, it looks like a locker number.',
+                words: [
+                  { korean: '아니', english: 'no' },
+                  { korean: '사물함', english: 'locker' },
+                  { korean: '번호', english: 'number' },
+                  { korean: '같아', english: 'it seems like' },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'det-ch2-p3',
+            imagePrompt: 'dark moody manga style illustration of two Korean students walking through a dark empty school hallway toward rows of lockers, long dramatic shadows, overhead fluorescent light flickering, tension and suspense',
+            narration: '두 사람은 사물함으로 갑니다.',
+            narrationEnglish: 'The two head to the lockers.',
+            dialogue: [
+              {
+                speaker: '지영',
+                speakerEnglish: 'Jiyoung',
+                korean: '조심해. 누가 올 수도 있어.',
+                romanization: 'josimhae. nuga ol sudo isseo.',
+                english: 'Be careful. Someone might come.',
+                words: [
+                  { korean: '조심해', english: 'be careful' },
+                  { korean: '누가', english: 'someone' },
+                  { korean: '올', english: 'come' },
+                  { korean: '수도', english: 'might' },
+                  { korean: '있어', english: 'could' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'det-ch2-p4',
+            imagePrompt: 'dark moody manga style illustration close-up of a Korean boy opening a school locker with trembling hands, dramatic spotlight on the locker, dark surroundings, suspenseful atmosphere, sweat drops',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '이 사물함이야. 열어볼게.',
+                romanization: 'i samulhamiya. yeoreo bolge.',
+                english: "This is the locker. I'll open it.",
+                words: [
+                  { korean: '이', english: 'this' },
+                  { korean: '사물함이야', english: 'is the locker' },
+                  { korean: '열어볼게', english: "I'll try opening it" },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'det-ch2-p5',
+            imagePrompt: 'dark moody manga style illustration of the inside of a school locker revealing a folded note with Korean writing, dramatic close-up with spotlight effect, dust particles in the light beam, mysterious atmosphere',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '편지가 있어! 누가 넣었을까?',
+                romanization: 'pyeonjiga isseo! nuga neoheosseulkka?',
+                english: "There's a letter! Who put it here?",
+                words: [
+                  { korean: '편지가', english: 'letter (subject)' },
+                  { korean: '있어', english: 'there is' },
+                  { korean: '누가', english: 'who' },
+                  { korean: '넣었을까', english: 'could have put' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '지영',
+                speakerEnglish: 'Jiyoung',
+                korean: '빨리 읽어봐!',
+                romanization: 'ppalli ilgeobwa!',
+                english: 'Quickly, read it!',
+                words: [
+                  { korean: '빨리', english: 'quickly' },
+                  { korean: '읽어봐', english: 'try reading it' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'det-ch2-p6',
+            imagePrompt: 'dark moody manga style illustration of a Korean teenage boy reading a mysterious handwritten note with wide shocked eyes, dramatic lighting on his face from below, letter visible with Korean text, dark background, emotional shock',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '"도서관 3층에서 기다려." 이게 뭐야?',
+                romanization: '"doseogwan 3cheung-eseo gidaryeo." ige mwoya?',
+                english: '"Wait on the 3rd floor of the library." What is this?',
+                words: [
+                  { korean: '도서관', english: 'library' },
+                  { korean: '3층에서', english: 'on the 3rd floor' },
+                  { korean: '기다려', english: 'wait' },
+                  { korean: '이게', english: 'this (subject)' },
+                  { korean: '뭐야', english: 'what is it' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'det-ch2-p7',
+            imagePrompt: 'dark moody manga style illustration of two Korean students looking at each other with determined expressions in a dark school hallway, dramatic split panel composition, one has clenched fist, the other nods seriously, noir atmosphere',
+            dialogue: [
+              {
+                speaker: '지영',
+                speakerEnglish: 'Jiyoung',
+                korean: '함정일 수도 있어. 위험해.',
+                romanization: 'hamjeongil sudo isseo. wiheomhae.',
+                english: 'It could be a trap. It\'s dangerous.',
+                words: [
+                  { korean: '함정일', english: 'a trap (might be)' },
+                  { korean: '수도', english: 'could' },
+                  { korean: '있어', english: 'be' },
+                  { korean: '위험해', english: "it's dangerous" },
+                ],
+                position: 'right',
+              },
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '괜찮아. 같이 가자.',
+                romanization: 'gwaenchana. gachi gaja.',
+                english: "It's okay. Let's go together.",
+                words: [
+                  { korean: '괜찮아', english: "it's okay" },
+                  { korean: '같이', english: 'together' },
+                  { korean: '가자', english: "let's go" },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'det-ch2-p8',
+            imagePrompt: 'dark moody manga style illustration of two Korean students climbing dark stairs in a library at night, dramatic upward angle, shadows stretching, moonlight through tall windows, sense of mystery and anticipation, cliffhanger scene',
+            narration: '두 사람은 도서관 3층으로 향합니다...',
+            narrationEnglish: 'The two head to the 3rd floor of the library...',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu (thinking)',
+                korean: '진실을 알게 될까?',
+                romanization: 'jinsireul alge doelkka?',
+                english: 'Will I find out the truth?',
+                words: [
+                  { korean: '진실을', english: 'truth (object)' },
+                  { korean: '알게', english: 'come to know' },
+                  { korean: '될까', english: 'will it happen' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   // ═══════════════════════════════════════════════
@@ -2616,6 +2833,235 @@ export const mangaSeries: MangaSeries[] = [
                 words: [
                   { korean: '정말요', english: 'really (polite)' },
                   { korean: '감사합니다', english: 'thank you (formal)' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+        ],
+      },
+      // ─────────────────────────────────────────────
+      // Chapter 2: First Day of Training (Level 2)
+      // ─────────────────────────────────────────────
+      {
+        id: 'kpop-ch2-first-training',
+        title: 'First Day of Training',
+        titleKorean: '연습 첫날',
+        level: 2,
+        description: 'Seoyeon begins her trainee life. Tough practices, a strict mentor, and a new rival await.',
+        panels: [
+          {
+            id: 'kpop-ch2-p1',
+            imagePrompt: 'colorful energetic manga style illustration of a young Korean girl walking into a large bright dance practice room for the first time, mirrors on all walls, wooden floors, other trainees stretching in background, morning sunlight through windows, excited nervous expression',
+            narration: '서연의 연습생 생활이 시작됩니다.',
+            narrationEnglish: 'Seoyeon\'s trainee life begins.',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '여기가 연습실이야... 진짜 크다!',
+                romanization: 'yeogiga yeonseupsiliya... jinjja keuda!',
+                english: 'This is the practice room... It\'s really big!',
+                words: [
+                  { korean: '여기가', english: 'this place (subject)' },
+                  { korean: '연습실이야', english: 'is the practice room' },
+                  { korean: '진짜', english: 'really' },
+                  { korean: '크다', english: "it's big" },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch2-p2',
+            imagePrompt: 'colorful energetic manga style illustration of a confident Korean girl with a ponytail looking coolly at a new arrival in a dance studio, arms crossed, slightly competitive expression, sparkle effects, vibrant pop colors, other trainees watching',
+            dialogue: [
+              {
+                speaker: '하은',
+                speakerEnglish: 'Haeun',
+                korean: '너도 신입? 나는 하은이야.',
+                romanization: 'neodo sinip? naneun haeuniya.',
+                english: 'You\'re also new? I\'m Haeun.',
+                words: [
+                  { korean: '너도', english: 'you too' },
+                  { korean: '신입', english: 'newcomer' },
+                  { korean: '나는', english: 'I (topic)' },
+                  { korean: '하은이야', english: 'am Haeun' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '네! 반가워요. 서연이에요.',
+                romanization: 'ne! bangawoyo. seoyeonieyo.',
+                english: 'Yes! Nice to meet you. I\'m Seoyeon.',
+                words: [
+                  { korean: '네', english: 'yes' },
+                  { korean: '반가워요', english: 'nice to meet you (polite)' },
+                  { korean: '서연이에요', english: 'I am Seoyeon (polite)' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch2-p3',
+            imagePrompt: 'colorful energetic manga style illustration of a strict Korean dance instructor standing in front of trainees in a dance studio, arms behind back, serious expression, all trainees standing in a line looking nervous, dramatic lighting',
+            dialogue: [
+              {
+                speaker: '코치',
+                speakerEnglish: 'Coach',
+                korean: '여기서는 노력만이 중요합니다.',
+                romanization: 'yeogiseoneun noryeongmani jungyohamnida.',
+                english: 'Here, only hard work matters.',
+                words: [
+                  { korean: '여기서는', english: 'here (topic)' },
+                  { korean: '노력만이', english: 'only effort' },
+                  { korean: '중요합니다', english: 'is important (formal)' },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch2-p4',
+            imagePrompt: 'colorful energetic manga style illustration of Korean girls doing intense dance practice, one girl struggling to keep up with the choreography while others move in sync, sweat drops, motion lines, dance studio with mirrors reflecting movements, dynamic angle',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon (thinking)',
+                korean: '너무 빨라... 따라갈 수 있을까?',
+                romanization: 'neomu ppalla... ttaragal su isseulkka?',
+                english: 'Too fast... Can I keep up?',
+                words: [
+                  { korean: '너무', english: 'too much' },
+                  { korean: '빨라', english: 'fast' },
+                  { korean: '따라갈', english: 'follow / keep up' },
+                  { korean: '수', english: 'ability' },
+                  { korean: '있을까', english: 'will there be' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch2-p5',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl sitting exhausted on the dance studio floor, water bottle beside her, towel around neck, breathing heavily, other trainees resting in background, warm lighting, sympathetic atmosphere',
+            dialogue: [
+              {
+                speaker: '하은',
+                speakerEnglish: 'Haeun',
+                korean: '괜찮아? 물 마셔.',
+                romanization: 'gwaenchana? mul masyeo.',
+                english: 'You okay? Drink some water.',
+                words: [
+                  { korean: '괜찮아', english: 'are you okay' },
+                  { korean: '물', english: 'water' },
+                  { korean: '마셔', english: 'drink' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '고마워. 생각보다 힘들어.',
+                romanization: 'gomawo. saenggakboda himdeureo.',
+                english: 'Thanks. It\'s harder than I thought.',
+                words: [
+                  { korean: '고마워', english: 'thanks (casual)' },
+                  { korean: '생각보다', english: 'more than expected' },
+                  { korean: '힘들어', english: "it's hard / tough" },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch2-p6',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl practicing alone in a dark dance studio at night, moonlight through windows, determination in her eyes, reflection visible in mirror, beautiful solitary atmosphere, motion blur on dance move',
+            narration: '밤늦게까지 서연은 혼자 연습합니다.',
+            narrationEnglish: 'Late into the night, Seoyeon practices alone.',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '포기하지 않을 거야. 한 번 더!',
+                romanization: 'pogihaji anheul geoya. han beon deo!',
+                english: "I won't give up. One more time!",
+                words: [
+                  { korean: '포기하지', english: 'give up' },
+                  { korean: '않을', english: 'will not' },
+                  { korean: '거야', english: 'going to' },
+                  { korean: '한 번', english: 'one time' },
+                  { korean: '더', english: 'more' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch2-p7',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean dance coach watching a girl perform with a slightly impressed expression, clipboard in hand, practice room background, subtle smile forming, warm encouraging lighting',
+            dialogue: [
+              {
+                speaker: '코치',
+                speakerEnglish: 'Coach',
+                korean: '서연 씨, 많이 좋아졌어요.',
+                romanization: 'seoyeon ssi, mani joajyeosseoyo.',
+                english: 'Seoyeon, you\'ve improved a lot.',
+                words: [
+                  { korean: '서연 씨', english: 'Seoyeon (polite address)' },
+                  { korean: '많이', english: 'a lot' },
+                  { korean: '좋아졌어요', english: 'has gotten better (polite)' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '정말요? 감사합니다!',
+                romanization: 'jeongmalyo? gamsahamnida!',
+                english: 'Really? Thank you!',
+                words: [
+                  { korean: '정말요', english: 'really (polite)' },
+                  { korean: '감사합니다', english: 'thank you (formal)' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch2-p8',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean coach posting a notice on a bulletin board while trainees gather around nervously, notice reads evaluation in Korean, dramatic suspenseful atmosphere with bright pop colors, cliffhanger moment',
+            narration: '다음 주, 중요한 소식이 있습니다...',
+            narrationEnglish: 'Next week, there is important news...',
+            dialogue: [
+              {
+                speaker: '코치',
+                speakerEnglish: 'Coach',
+                korean: '다음 주에 평가가 있습니다. 준비하세요.',
+                romanization: 'daeum jue pyeonggaga isseumnida. junbihaseyo.',
+                english: 'There is an evaluation next week. Please prepare.',
+                words: [
+                  { korean: '다음 주에', english: 'next week' },
+                  { korean: '평가가', english: 'evaluation (subject)' },
+                  { korean: '있습니다', english: 'there is (formal)' },
+                  { korean: '준비하세요', english: 'please prepare (honorific)' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon (thinking)',
+                korean: '평가... 잘할 수 있을까?',
+                romanization: 'pyeongga... jalhal su isseulkka?',
+                english: 'Evaluation... Can I do well?',
+                words: [
+                  { korean: '평가', english: 'evaluation' },
+                  { korean: '잘할', english: 'do well' },
+                  { korean: '수', english: 'ability' },
+                  { korean: '있을까', english: 'will there be' },
                 ],
                 position: 'right',
               },

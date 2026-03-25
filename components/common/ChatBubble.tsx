@@ -3,14 +3,17 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, shadows } from '@/lib/theme';
 
 export function ChatBubble() {
+  const insets = useSafeAreaInsets();
+
   return (
     <TouchableOpacity
       onPress={() => router.push('/chat')}
       activeOpacity={0.8}
-      style={styles.container}
+      style={[styles.container, { bottom: 85 + insets.bottom }]}
     >
       <LinearGradient colors={colors.gradientPrimary} style={styles.bubble}>
         <Ionicons name="chatbubble-ellipses" size={26} color="#fff" />
@@ -22,7 +25,6 @@ export function ChatBubble() {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 100,
     right: 20,
     zIndex: 999,
   },

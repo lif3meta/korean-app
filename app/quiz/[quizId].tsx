@@ -59,7 +59,9 @@ export default function QuizScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <QuizProgress current={answered} total={questions.length} correct={correct} />
+      <View style={styles.progress}>
+        <QuizProgress current={answered} total={questions.length} correct={correct} />
+      </View>
 
       <ScrollView style={styles.content} contentContainerStyle={styles.contentInner} showsVerticalScrollIndicator={false}>
         {currentQ.type === 'multiple_choice' && (
@@ -99,7 +101,8 @@ export default function QuizScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.xl },
+  container: { flex: 1, backgroundColor: colors.background },
   content: { flex: 1 },
-  contentInner: { paddingVertical: spacing.xxl },
+  contentInner: { paddingVertical: spacing.xxl, paddingHorizontal: spacing.xl },
+  progress: { paddingHorizontal: spacing.xl, paddingTop: spacing.xl },
 });

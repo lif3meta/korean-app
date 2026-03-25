@@ -13,6 +13,7 @@ const API_BASE_URL = extra.apiBaseUrl?.replace(/\/$/, '') ?? '';
 let _audioWebViewRef: any = null;
 
 export function setAudioWebViewRef(ref: any): void {
+  console.log(`[Audio] setAudioWebViewRef: ${ref ? 'connected' : 'disconnected'}`);
   _audioWebViewRef = ref;
 }
 
@@ -59,6 +60,8 @@ function stopPollinations(): void {
 function normalizeChatSpeechText(text: string): string {
   return cleanSpeechText(text)
     .replace(/\(([A-Za-z][A-Za-z\s'.,-]*)\)/g, '')
+    .replace(/!+/g, '.')   // replace exclamation marks with period to prevent TTS screaming
+    .replace(/\.{2,}/g, '.') // collapse multiple dots
     .replace(/\s{2,}/g, ' ')
     .trim();
 }
@@ -112,11 +115,19 @@ function speakWithExpoSpeech(text: string, language: string, rate: number): void
   const cleanText = cleanSpeechText(text);
   if (!cleanText) return;
 
+  console.log(`[Audio] speakWithExpoSpeech: lang=${language} rate=${rate} text="${cleanText.substring(0, 50)}"`);
   Speech.speak(cleanText, {
     language,
     rate,
     pitch: 1.0,
-    onError: () => {
+    onStart: () => {
+      console.log(`[Audio] Speech started: "${cleanText.substring(0, 30)}"`);
+    },
+    onDone: () => {
+      console.log(`[Audio] Speech done: "${cleanText.substring(0, 30)}"`);
+    },
+    onError: (error) => {
+      console.warn(`[Audio] Speech.speak error for lang=${language}:`, error);
       const fallbackVoice = language.startsWith('ko') ? 'nova' : 'alloy';
       playViaPollinations(cleanText, fallbackVoice);
     },
@@ -127,14 +138,25 @@ function speakWithExpoSpeechAsync(text: string, language: string, rate: number):
   const cleanText = cleanSpeechText(text);
   if (!cleanText) return Promise.resolve();
 
+  console.log(`[Audio] speakWithExpoSpeechAsync: lang=${language} rate=${rate} text="${cleanText.substring(0, 50)}"`);
   return new Promise<void>((resolve) => {
     Speech.speak(cleanText, {
       language,
       rate,
       pitch: 1.0,
-      onDone: resolve,
-      onStopped: resolve,
-      onError: () => {
+      onStart: () => {
+        console.log(`[Audio] Async speech started: "${cleanText.substring(0, 30)}"`);
+      },
+      onDone: () => {
+        console.log(`[Audio] Async speech done: "${cleanText.substring(0, 30)}"`);
+        resolve();
+      },
+      onStopped: () => {
+        console.log(`[Audio] Async speech stopped: "${cleanText.substring(0, 30)}"`);
+        resolve();
+      },
+      onError: (error) => {
+        console.warn(`[Audio] Async Speech.speak error for lang=${language}:`, error);
         const fallbackVoice = language.startsWith('ko') ? 'nova' : 'alloy';
         playViaPollinations(cleanText, fallbackVoice);
         resolve();
@@ -157,7 +179,7 @@ function splitIntoSpeechSegments(text: string): SpeechSegment[] {
   for (const chunk of chunks) {
     const hasKorean = /[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F]/.test(chunk);
     const language: 'ko-KR' | 'en-US' = hasKorean ? 'ko-KR' : 'en-US';
-    const rate = hasKorean ? 0.85 : 0.92;
+    const rate = hasKorean ? 1.0 : 1.0;
     const previous = segments[segments.length - 1];
 
     if (previous && previous.language === language) {

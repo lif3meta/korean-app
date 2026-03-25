@@ -132,10 +132,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   tab: {
-    flex: 1,
-    minWidth: '28%',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
     borderRadius: borderRadius.full,
     backgroundColor: colors.surface,
     borderWidth: 1,

@@ -10,6 +10,9 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
+// expo-av is lazy-loaded to avoid crash in Expo Go
+let Audio: any = null;
+try { Audio = require('expo-av').Audio; } catch {}
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -34,7 +37,19 @@ const TEACHERS = {
     avatar: 'M',
     gradient: [colors.primary, colors.primaryDark] as const,
     voice: 'coral' as const,
-    personality: `You are 민지 (Minji), a warm, bubbly 28-year-old Korean language teacher from Seoul. You LOVE K-dramas and K-pop and often reference them. You are like a caring older sister (언니/누나) to your students. You get excited when students get things right ("Oh my gosh, yes! Perfect!"). You use a mix of English and Korean naturally. You have little catchphrases like "Aigoo!" when something is cute or surprising, and "Daebak!" when impressed. You sometimes share fun Korean culture facts. You are patient but playful - if a student makes a mistake you laugh gently and help them. Keep responses conversational and short (2-4 sentences). Always include Korean with romanization. You ONLY teach Korean - if asked about anything else, cutely redirect: "Hmm, let's save that for later! Right now, Korean time!" Teach like a friend, not a textbook. Start simple and get harder as the student improves.`,
+    personality: `You are 민지 (Minji), a sweet, warm, bubbly 28-year-old Korean language teacher from Seoul. You LOVE K-dramas and K-pop and often reference them. You are like a caring sister (언니/누나) to your students. You get excited when students get things right ("Oh my gosh, yes, perfect!"). You use a mix of English and Korean naturally. You have little catchphrases like "Aigoo~" when something is cute or surprising, and "Daebak~" when impressed. You sometimes share fun Korean culture facts. You are patient but playful - if a student makes a mistake you laugh gently and help them.
+
+CRITICAL RULES:
+- ALWAYS respond primarily in ENGLISH. You are teaching Korean TO an English speaker.
+- When the user writes something (in English or Korean), ALWAYS acknowledge what they said, then teach them something new or correct them.
+- If the user writes in Korean, tell them if it was correct or not, explain any mistakes, then teach the next thing.
+- If the user writes in English, translate what they said into Korean with romanization, then teach a related phrase or word.
+- Include Korean words/phrases WITH romanization in parentheses, like: 안녕하세요 (annyeonghaseyo).
+- Keep responses short (2-4 sentences) and conversational.
+- ALWAYS give the student something new to try at the end.
+- You ONLY teach Korean - if asked about anything else, cutely redirect: "Hmm, let's save that for later, Korean time~"
+- Avoid excessive exclamation marks. Use ~ for enthusiasm instead (e.g. "Daebak~" not "Daebak!!!")
+- Teach like a friend, not a textbook. Start simple and get harder as the student improves.`,
   },
   male: {
     name: 'Junwoo',
@@ -42,7 +57,19 @@ const TEACHERS = {
     avatar: 'J',
     gradient: ['#7C4DFF', '#3D5AFE'] as const,
     voice: 'ash' as const,
-    personality: `You are 준우 (Junwoo), a cool, laid-back 30-year-old Korean teacher from Busan. You have a chill energy but get passionate about Korean language. You use humor a lot and make dad jokes mixing Korean and English. You're like a supportive older brother (형/오빠). You say things like "Niiice!" and "Let's gooo!" when students do well. You love Korean food and BBQ and often use food examples. You sometimes use Busan satoori (dialect) as fun extras. You're patient and encouraging - when students struggle you say "No worries, we got this." Keep responses natural and short (2-4 sentences). Always include Korean with romanization. You ONLY teach Korean - if asked about anything else, redirect casually: "Haha, that's cool but let's focus on Korean right now!" Teach conversationally. Start simple, get harder as student improves.`,
+    personality: `You are 준우 (Junwoo), a cool, laid-back 30-year-old Korean teacher from Busan. You have a chill energy but get passionate about Korean language. You use humor a lot and make dad jokes mixing Korean and English. You're like a supportive older brother (형/오빠). You say things like "Niiice" and "Let's gooo" when students do well. You love Korean food and BBQ and often use food examples. You sometimes use Busan satoori (dialect) as fun extras. You're patient and encouraging - when students struggle you say "No worries, we got this."
+
+CRITICAL RULES:
+- ALWAYS respond primarily in ENGLISH. You are teaching Korean TO an English speaker.
+- When the user writes something (in English or Korean), ALWAYS acknowledge what they said, then teach them something new or correct them.
+- If the user writes in Korean, tell them if it was correct or not, explain any mistakes, then teach the next thing.
+- If the user writes in English, translate what they said into Korean with romanization, then teach a related phrase or word.
+- Include Korean words/phrases WITH romanization in parentheses, like: 안녕하세요 (annyeonghaseyo).
+- Keep responses short (2-4 sentences) and conversational.
+- ALWAYS give the student something new to try at the end.
+- You ONLY teach Korean - if asked about anything else, redirect casually: "Haha, that's cool but let's focus on Korean right now."
+- Avoid excessive exclamation marks. Use drawn-out words for emphasis instead (e.g. "Niiice" not "Nice!!!")
+- Teach conversationally. Start simple, get harder as student improves.`,
   },
 };
 
@@ -65,7 +92,10 @@ export default function ChatScreen() {
   const [error, setError] = useState<string | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [teacherGender, setTeacherGender] = useState<TeacherGender | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+  const recordingRef = useRef<any>(null);
   const hapticEnabled = useAppStore((s) => s.hapticEnabled);
 
   const teacher = teacherGender ? TEACHERS[teacherGender] : null;
@@ -89,8 +119,8 @@ export default function ChatScreen() {
       id: 'welcome',
       role: 'assistant',
       content: gender === 'female'
-        ? `Annyeonghaseyo! I'm Minji, your Korean teacher! So excited to meet you! We're going to have so much fun learning Korean together. Let's start easy - can you say 안녕 (annyeong)? That means "hi" between friends!`
-        : `Hey! What's up! I'm Junwoo, your Korean teacher. Welcome! Let's make learning Korean fun and chill. First things first - try saying 안녕 (annyeong). It's the casual way to say "hi"!`,
+        ? `Annyeonghaseyo~ I'm Minji, your Korean teacher. So excited to meet you~ We're going to have so much fun learning Korean together. Let's start easy - can you say 안녕 (annyeong)? That means "hi" between friends.`
+        : `Hey, what's up~ I'm Junwoo, your Korean teacher. Welcome. Let's make learning Korean fun and chill. First things first - try saying 안녕 (annyeong). It's the casual way to say "hi".`,
     };
     setMessages([welcome]);
     setTimeout(() => speakFull(welcome.content, gender), 500);
@@ -105,6 +135,77 @@ export default function ChatScreen() {
     const duration = Math.min(message.content.length * 80, 15000);
     setTimeout(() => setPlayingId(null), duration);
   };
+
+  const handleMicPress = useCallback(async () => {
+    if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
+    if (isRecording) {
+      // Stop recording and transcribe
+      setIsRecording(false);
+      setIsTranscribing(true);
+      try {
+        const recording = recordingRef.current;
+        if (!recording) return;
+        await recording.stopAndUnloadAsync();
+        await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+        const uri = recording.getURI();
+        recordingRef.current = null;
+
+        if (uri) {
+          const formData = new FormData();
+          formData.append('file', {
+            uri,
+            type: 'audio/m4a',
+            name: 'recording.m4a',
+          } as any);
+          formData.append('model', 'whisper-1');
+          formData.append('language', 'ko');
+
+          const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
+            },
+            body: formData,
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.text) {
+              setInputText(data.text);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Transcription error:', err);
+      } finally {
+        setIsTranscribing(false);
+      }
+    } else {
+      // Start recording
+      try {
+        if (!Audio) {
+          setInputText('(Mic requires dev build — type instead)');
+          return;
+        }
+        const { granted } = await Audio.requestPermissionsAsync();
+        if (!granted) return;
+
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: true,
+          playsInSilentModeIOS: true,
+        });
+
+        const recording = new Audio.Recording();
+        await recording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+        await recording.startAsync();
+        recordingRef.current = recording;
+        setIsRecording(true);
+      } catch (err) {
+        console.warn('Recording error:', err);
+      }
+    }
+  }, [isRecording, hapticEnabled]);
 
   const sendMessage = async () => {
     const trimmed = inputText.trim();
@@ -125,10 +226,13 @@ export default function ChatScreen() {
     setIsLoading(true);
 
     try {
-      const apiMessages = updatedMessages.map((msg) => ({
-        role: msg.role,
-        content: msg.content,
-      }));
+      const apiMessages = [
+        { role: 'system', content: teacher!.personality },
+        ...updatedMessages.map((msg) => ({
+          role: msg.role,
+          content: msg.content,
+        })),
+      ];
 
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -136,7 +240,6 @@ export default function ChatScreen() {
         body: JSON.stringify({
           messages: apiMessages,
           model: 'openai',
-          system: teacher!.personality,
         }),
       });
 
@@ -296,19 +399,37 @@ export default function ChatScreen() {
 
       {/* Input */}
       <View style={[styles.inputContainer, { paddingBottom: insets.bottom + spacing.sm }]}>
+        {isTranscribing && (
+          <View style={styles.transcribingBar}>
+            <ActivityIndicator size="small" color={colors.primary} />
+            <Text style={styles.transcribingText}>Transcribing...</Text>
+          </View>
+        )}
         <View style={styles.inputRow}>
           <TextInput
             style={styles.textInput}
             value={inputText}
             onChangeText={setInputText}
-            placeholder={`Talk to ${t.name}...`}
-            placeholderTextColor={colors.textTertiary}
+            placeholder={isRecording ? 'Listening...' : `Talk to ${t.name}...`}
+            placeholderTextColor={isRecording ? colors.danger : colors.textTertiary}
             multiline
             maxLength={500}
-            editable={!isLoading}
+            editable={!isLoading && !isRecording}
             onSubmitEditing={sendMessage}
             returnKeyType="send"
           />
+          <TouchableOpacity
+            style={[styles.micButton, isRecording && styles.micButtonRecording]}
+            onPress={handleMicPress}
+            disabled={isLoading || isTranscribing}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={isRecording ? 'stop-circle' : 'mic'}
+              size={22}
+              color={isRecording ? '#fff' : colors.textSecondary}
+            />
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.sendButton, (!inputText.trim() || isLoading) && { opacity: 0.4 }]}
             onPress={sendMessage}
@@ -384,6 +505,10 @@ const styles = StyleSheet.create({
   inputContainer: { backgroundColor: colors.surface, paddingTop: spacing.sm, paddingHorizontal: spacing.lg, borderTopWidth: 1, borderTopColor: colors.borderLight },
   inputRow: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm },
   textInput: { flex: 1, fontSize: 15, fontFamily: 'Poppins-Regular', color: colors.textPrimary, backgroundColor: colors.background, borderRadius: borderRadius.xl, paddingHorizontal: spacing.lg, paddingTop: Platform.OS === 'ios' ? spacing.md : spacing.sm, paddingBottom: Platform.OS === 'ios' ? spacing.md : spacing.sm, maxHeight: 100, borderWidth: 1, borderColor: colors.borderLight },
+  micButton: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background, borderWidth: 1, borderColor: colors.borderLight, marginBottom: Platform.OS === 'ios' ? 2 : 0 },
+  micButtonRecording: { backgroundColor: colors.danger, borderColor: colors.danger },
   sendButton: { marginBottom: Platform.OS === 'ios' ? 2 : 0 },
   sendButtonGradient: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center' },
+  transcribingBar: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingHorizontal: spacing.md, paddingBottom: spacing.xs },
+  transcribingText: { fontSize: 12, fontFamily: 'Poppins-Medium', color: colors.primary, fontStyle: 'italic' },
 });

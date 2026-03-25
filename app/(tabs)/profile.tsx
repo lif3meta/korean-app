@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -18,8 +18,25 @@ export default function ProfileScreen() {
   const store = useAppStore();
   const level = getLevelFromXP(store.totalXP);
 
+  const storeData = {
+    learnedCharacters: store.learnedCharacters,
+    learnedWords: store.learnedWords,
+    completedLessons: store.completedLessons,
+    quizHistory: store.quizHistory,
+    currentStreak: store.currentStreak,
+    totalXP: store.totalXP,
+  };
+
+  const newlyUnlocked = achievements
+    .filter(ach => !store.unlockedAchievements.includes(ach.id) && ach.condition(storeData))
+    .map(ach => ach.id);
+
+  useEffect(() => {
+    newlyUnlocked.forEach(id => store.unlockAchievement(id));
+  }, [newlyUnlocked.join(',')]);
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xxxl }} showsVerticalScrollIndicator={false}>
       <LinearGradient colors={['#AA00FF', '#E040FB', '#FF80AB']} style={[styles.header, { paddingTop: insets.top + spacing.xl }]}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{(store.userName || 'L')[0].toUpperCase()}</Text>
@@ -59,20 +76,7 @@ export default function ProfileScreen() {
         <Text style={styles.sectionTitle}>Achievements</Text>
         <View style={styles.achievementsGrid}>
           {achievements.map((ach) => {
-            const unlocked = store.unlockedAchievements.includes(ach.id) ||
-              ach.condition({
-                learnedCharacters: store.learnedCharacters,
-                learnedWords: store.learnedWords,
-                completedLessons: store.completedLessons,
-                quizHistory: store.quizHistory,
-                currentStreak: store.currentStreak,
-                totalXP: store.totalXP,
-              });
-
-            // Auto-unlock if condition met
-            if (unlocked && !store.unlockedAchievements.includes(ach.id)) {
-              store.unlockAchievement(ach.id);
-            }
+            const unlocked = store.unlockedAchievements.includes(ach.id) || newlyUnlocked.includes(ach.id);
 
             return (
               <Card key={ach.id} style={[styles.achCard, !unlocked ? styles.achLocked : undefined]}>

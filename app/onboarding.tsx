@@ -11,7 +11,7 @@ const { width } = Dimensions.get('window');
 
 const slides = [
   {
-    title: 'Welcome to HanFlow',
+    title: 'Welcome to Lzy Learn Korean',
     subtitle: '한국어를 배워요!',
     description: 'Your personal Korean language learning journey starts here',
     image: require('@/assets/images/onboarding1.png'),

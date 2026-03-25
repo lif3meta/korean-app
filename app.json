@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "HanFlow",
+    "name": "Lzy Learn Korean",
     "slug": "korean-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "backgroundColor": "#ffffff",
-    "scheme": "hanflow",
+    "scheme": "lzy-learn-korean",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -18,10 +18,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.hanflow.korean",
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "HanFlow needs microphone access so you can practice speaking Korean and get pronunciation feedback."
+        "NSMicrophoneUsageDescription": "Lzy Learn Korean needs microphone access so you can practice speaking Korean and get pronunciation feedback."
       }
     },
     "android": {
+      "package": "com.hanflow.korean",
       "permissions": ["android.permission.RECORD_AUDIO"],
       "adaptiveIcon": {
         "backgroundColor": "#1A0A2E",

@@ -14,6 +14,19 @@ import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme'
 import { mangaSeries } from '@/data/manga';
 import type { MangaSeries } from '@/data/manga';
 
+let mangaImages: Record<string, any> = {};
+try {
+  mangaImages = require('@/data/mangaImages').mangaImages;
+} catch {
+  // No local images yet
+}
+
+function getCoverSource(series: MangaSeries): any {
+  const localKey = `cover-${series.id}`;
+  if (mangaImages[localKey]) return mangaImages[localKey];
+  return { uri: getCoverUrl(series) };
+}
+
 const levelLabels: Record<number, string> = {
   1: 'Beginner',
   2: 'Elementary',
@@ -105,7 +118,7 @@ export default function MangaSeriesScreen() {
         {mangaSeries.map((series, index) => {
           const gradient = seriesGradients[index % seriesGradients.length];
           const iconName = genreIcons[series.genre] || 'book';
-          const coverUrl = getCoverUrl(series);
+          const coverSource = getCoverSource(series);
 
           return (
             <TouchableOpacity
@@ -115,7 +128,7 @@ export default function MangaSeriesScreen() {
             >
               <View style={styles.seriesCard}>
                 <Image
-                  source={{ uri: coverUrl }}
+                  source={coverSource}
                   style={styles.seriesCardImage}
                   resizeMode="cover"
                 />
@@ -181,7 +194,7 @@ function SeriesDetailView({
   isChapterUnlocked: (index: number) => boolean;
   onBack: () => void;
 }) {
-  const coverUrl = getCoverUrl(series);
+  const coverSource = getCoverSource(series);
 
   return (
     <ScrollView
@@ -191,7 +204,7 @@ function SeriesDetailView({
     >
       <View style={styles.coverContainer}>
         <Image
-          source={{ uri: coverUrl }}
+          source={coverSource}
           style={styles.coverImage}
           resizeMode="cover"
         />

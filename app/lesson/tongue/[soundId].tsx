@@ -187,7 +187,7 @@ export default function SoundDetailScreen() {
   if (item.similarEnglish) steps.push(`Target sound: ${item.similarEnglish}`);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false}>
       {/* Hero */}
       <View style={[styles.hero, { backgroundColor: typeColor + '10' }]}>
         <Text style={[styles.heroKorean, { color: typeColor }]}>{item.korean}</Text>

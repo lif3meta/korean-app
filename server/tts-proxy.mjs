@@ -1,37 +1,11 @@
 import { createServer } from 'node:http';
-import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-
-function loadEnvFile(filename) {
-  const filePath = resolve(process.cwd(), filename);
-  if (!existsSync(filePath)) return;
-
-  const lines = readFileSync(filePath, 'utf8').split(/\r?\n/);
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-
-    const separatorIndex = trimmed.indexOf('=');
-    if (separatorIndex === -1) continue;
-
-    const key = trimmed.slice(0, separatorIndex).trim();
-    if (!key || process.env[key] !== undefined) continue;
-
-    const rawValue = trimmed.slice(separatorIndex + 1).trim();
-    const value = rawValue.replace(/^(['"])(.*)\1$/, '$2');
-    process.env[key] = value;
-  }
-}
-
-loadEnvFile('.env.local');
+import { EdgeTTS } from '@andresaya/edge-tts';
 
 const PORT = Number(process.env.PORT || 8787);
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const OPENAI_TTS_MODEL = process.env.OPENAI_TTS_MODEL || 'gpt-4o-mini-tts';
 
-const CHAT_VOICE_INSTRUCTIONS = {
-  coral: 'Speak like a warm, bubbly Korean teacher. Keep the tone clear, upbeat, feminine, and natural. Pronounce Korean natively and English naturally. Do not sound robotic or overdramatic.',
-  ash: 'Speak like a calm, confident Korean teacher. Keep the tone warm, relaxed, masculine, and natural. Pronounce Korean natively and English naturally. Do not sound robotic or overdramatic.',
+const VOICE_MAP = {
+  coral: 'ko-KR-SunHiNeural',
+  ash: 'ko-KR-InJoonNeural',
 };
 
 function writeJson(res, status, body) {
@@ -73,6 +47,12 @@ async function readJsonBody(req) {
   }
 }
 
+async function synthesize(text, voiceKey) {
+  const tts = new EdgeTTS();
+  await tts.synthesize(text, VOICE_MAP[voiceKey]);
+  return tts.toBuffer();
+}
+
 const server = createServer(async (req, res) => {
   writeCorsHeaders(res);
 
@@ -88,14 +68,9 @@ const server = createServer(async (req, res) => {
   }
 
   if (req.method === 'GET' && req.url?.startsWith('/api/chat-speech')) {
-    if (!OPENAI_API_KEY) {
-      writeJson(res, 500, { error: 'OPENAI_API_KEY is not configured on the server' });
-      return;
-    }
-
     try {
       const requestUrl = new URL(req.url, `http://${req.headers.host || '127.0.0.1'}`);
-      const requestedVoice = requestUrl.searchParams.get('voice') === 'ash' ? 'ash' : 'coral';
+      const voiceKey = requestUrl.searchParams.get('voice') === 'ash' ? 'ash' : 'coral';
       const input = normalizeSpeechInput(requestUrl.searchParams.get('text') || '');
 
       if (!input) {
@@ -103,37 +78,13 @@ const server = createServer(async (req, res) => {
         return;
       }
 
-      const upstream = await fetch('https://api.openai.com/v1/audio/speech', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: OPENAI_TTS_MODEL,
-          voice: requestedVoice,
-          input,
-          response_format: 'wav',
-          instructions: CHAT_VOICE_INSTRUCTIONS[requestedVoice],
-        }),
-      });
-
-      if (!upstream.ok) {
-        const errorText = await upstream.text();
-        writeJson(res, upstream.status, {
-          error: 'OpenAI speech request failed',
-          details: errorText.slice(0, 1000),
-        });
-        return;
-      }
-
-      const audioBuffer = Buffer.from(await upstream.arrayBuffer());
+      const audioBuffer = await synthesize(input, voiceKey);
       res.writeHead(200, {
-        'Content-Type': upstream.headers.get('content-type') || 'audio/wav',
+        'Content-Type': 'audio/mpeg',
         'Content-Length': String(audioBuffer.length),
-        'Cache-Control': 'no-store',
+        'Cache-Control': 'public, max-age=86400',
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       });
       res.end(audioBuffer);
@@ -151,14 +102,9 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  if (!OPENAI_API_KEY) {
-    writeJson(res, 500, { error: 'OPENAI_API_KEY is not configured on the server' });
-    return;
-  }
-
   try {
     const body = await readJsonBody(req);
-    const requestedVoice = body.voice === 'ash' ? 'ash' : 'coral';
+    const voiceKey = body.voice === 'ash' ? 'ash' : 'coral';
     const input = normalizeSpeechInput(body.text);
 
     if (!input) {
@@ -166,37 +112,13 @@ const server = createServer(async (req, res) => {
       return;
     }
 
-    const upstream = await fetch('https://api.openai.com/v1/audio/speech', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: OPENAI_TTS_MODEL,
-        voice: requestedVoice,
-        input,
-        response_format: 'wav',
-        instructions: CHAT_VOICE_INSTRUCTIONS[requestedVoice],
-      }),
-    });
-
-    if (!upstream.ok) {
-      const errorText = await upstream.text();
-      writeJson(res, upstream.status, {
-        error: 'OpenAI speech request failed',
-        details: errorText.slice(0, 1000),
-      });
-      return;
-    }
-
-    const audioBuffer = Buffer.from(await upstream.arrayBuffer());
+    const audioBuffer = await synthesize(input, voiceKey);
     res.writeHead(200, {
-      'Content-Type': upstream.headers.get('content-type') || 'audio/wav',
+      'Content-Type': 'audio/mpeg',
       'Content-Length': String(audioBuffer.length),
-      'Cache-Control': 'no-store',
+      'Cache-Control': 'public, max-age=86400',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     });
     res.end(audioBuffer);

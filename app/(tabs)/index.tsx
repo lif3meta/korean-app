@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,6 +13,27 @@ import { vocabulary } from '@/data/vocabulary';
 import { grammarLessons } from '@/data/grammar';
 
 const MASCOT_IMAGE = require('@/assets/images/sloth-mascot.png');
+
+const CULTURE_TIPS = [
+  "In Korea, age matters in language! You use different words depending on your gender and your relationship to the person.",
+  "Koreans bow when greeting. A slight bow (15°) is casual; a deep bow (45°) shows great respect.",
+  "In Korean, '밥' (rice) also means 'meal'. Asking '밥 먹었어?' (Did you eat?) is like saying 'How are you?'",
+  "Koreans count age differently! You're 1 year old at birth, and everyone ages up on New Year's Day (Korean age).",
+  "In Korea, you never pour your own drink. You pour for others and they pour for you — it's about respect.",
+  "Korean has speech levels. 존댓말 (formal) is for elders and strangers; 반말 (casual) is for close friends.",
+  "Shoes off! Koreans always remove shoes before entering a home. It's considered very rude to keep them on.",
+  "The number 4 (사/sa) sounds like 'death' in Korean. Many buildings skip the 4th floor!",
+  "In Korea, writing someone's name in red ink is taboo — it's associated with death and funerals.",
+  "Koreans celebrate 100 days (백일/baegil) of a relationship. Couples exchange gifts and go on special dates!",
+  "In Korea, blood type is believed to determine personality. Type A = organized, Type B = creative, Type O = confident.",
+  "Korean BBQ etiquette: the youngest grills the meat, and the eldest takes the first bite.",
+  "'눈치' (nunchi) is a core Korean concept — the ability to read the room and understand unspoken feelings.",
+  "In Korea, you receive and give things with both hands, especially to elders. It shows respect.",
+  "The Korean alphabet (한글/Hangul) was invented by King Sejong in 1443 to promote literacy among common people.",
+  "In Korea, '선배' (seonbae) means senior and '후배' (hubae) means junior — these relationships are very important.",
+  "Koreans often say '파이팅!' (fighting!) to cheer someone on. It means 'You can do it!'",
+  "In Korean culture, the eldest person at the table eats first. Younger people wait before starting their meal.",
+];
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -32,6 +53,7 @@ export default function HomeScreen() {
   const dueCards = getDueCards();
   const level = getLevelFromXP(totalXP);
   const levelTitle = getLevelTitle(level);
+  const cultureTip = useMemo(() => CULTURE_TIPS[Math.floor(Math.random() * CULTURE_TIPS.length)], []);
   // Overall progress: characters + words + lessons
   const totalItems = allHangul.length + vocabulary.length + grammarLessons.length;
   const completedItems = learnedCharacters.length + learnedWords.length + Object.keys(completedLessons).length;
@@ -41,23 +63,27 @@ export default function HomeScreen() {
   const nextGrammarLesson = grammarLessons.find((l) => !completedLessons[l.id]);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+    <ScrollView
+  style={styles.container}
+  contentContainerStyle={{ paddingBottom: spacing.xxl }}
+  showsVerticalScrollIndicator={false}
+>
       {/* ===== HEADER ===== */}
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
             <Image source={MASCOT_IMAGE} style={styles.headerAvatar} />
             <Text style={styles.headerBrand}>
-              <Text style={styles.headerBrandItalic}>Lzy</Text>
-              {' '}Learn Korean
-            </Text>
+  <Text style={styles.headerBrandItalic}>Lzy</Text>
+  {' '}Learn Korean
+</Text>
           </View>
           <TouchableOpacity
             onPress={() => router.push('/settings' as any)}
             style={styles.headerIconBtn}
             activeOpacity={0.7}
           >
-            <Ionicons name="notifications-outline" size={22} color={colors.textSecondary} />
+            <Ionicons name="settings-outline" size={22} color={colors.textSecondary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -188,18 +214,18 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* ===== SLEEP LEARNING CARD ===== */}
+        {/* ===== PARROT LEARNING CARD ===== */}
         <TouchableOpacity
           onPress={() => router.push('/sleep')}
           activeOpacity={0.8}
           style={styles.sleepCard}
         >
           <View style={styles.sleepIconWrap}>
-            <Ionicons name="moon" size={22} color="#8b5cf6" />
+            <Ionicons name="sync" size={22} color="#8b5cf6" />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.sleepTitle}>Sleep Learning</Text>
-            <Text style={styles.sleepSub}>Repeat words while you rest</Text>
+            <Text style={styles.sleepTitle}>Parrot Learning</Text>
+            <Text style={styles.sleepSub}>Repeats phrases</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color="rgba(255,255,255,0.5)" />
         </TouchableOpacity>
@@ -237,7 +263,7 @@ export default function HomeScreen() {
             <Text style={styles.tipTitle}>Korean Culture Tip</Text>
           </View>
           <Text style={styles.tipText}>
-            In Korea, age matters in language! You use different words depending on your gender and your relationship to the person.
+            {cultureTip}
           </Text>
         </View>
       </View>

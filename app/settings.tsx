@@ -111,10 +111,10 @@ export default function SettingsScreen() {
 
       {/* About */}
       <View style={styles.aboutSection}>
-        <Text style={styles.aboutTitle}>HanFlow</Text>
-        <Text style={styles.aboutSub}>한플로우</Text>
+        <Text style={styles.aboutTitle}>Lzy Learn Korean</Text>
+       
         <Text style={styles.aboutVersion}>Version 1.0.0</Text>
-        <Text style={styles.aboutText}>Learn Korean with K-pop vibes</Text>
+        <Text style={styles.aboutText}>Learn Korean the lazy but fun way</Text>
       </View>
     </ScrollView>
   );

@@ -32,7 +32,7 @@ export default function CharacterDetailScreen() {
   }, [char.sound]);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 32 }}>
       {/* Main Character Display */}
       <View style={styles.characterSection}>
         <TouchableOpacity onPress={handlePlay} activeOpacity={0.8}>

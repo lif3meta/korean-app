@@ -1,4 +1,4 @@
-export type VocabCategory = 'greetings' | 'numbers' | 'family' | 'food' | 'colors' | 'time' | 'places' | 'verbs' | 'adjectives' | 'daily';
+export type VocabCategory = 'greetings' | 'numbers' | 'family' | 'food' | 'colors' | 'time' | 'places' | 'verbs' | 'adjectives' | 'daily' | 'body' | 'weather' | 'emotions' | 'animals' | 'objects';
 
 export interface VocabWord {
   id: string;
@@ -30,6 +30,11 @@ export const categoryInfo: Record<VocabCategory, { name: string; nameKorean: str
   verbs: { name: 'Basic Verbs', nameKorean: '동사', icon: 'flash', color: '#E040FB' },
   adjectives: { name: 'Adjectives', nameKorean: '형용사', icon: 'star', color: '#FFAB40' },
   daily: { name: 'Daily Life', nameKorean: '일상', icon: 'sunny', color: '#00BCD4' },
+  body: { name: 'Body Parts', nameKorean: '신체', icon: 'body', color: '#FF7043' },
+  weather: { name: 'Weather', nameKorean: '날씨', icon: 'cloud', color: '#42A5F5' },
+  emotions: { name: 'Emotions', nameKorean: '감정', icon: 'heart', color: '#EF5350' },
+  animals: { name: 'Animals', nameKorean: '동물', icon: 'paw', color: '#8D6E63' },
+  objects: { name: 'Objects', nameKorean: '물건', icon: 'cube', color: '#78909C' },
 };
 
 export const vocabulary: VocabWord[] = [
@@ -191,6 +196,76 @@ export const vocabulary: VocabWord[] = [
   { id: 'da_13', korean: '여행', romanization: 'yeohaeng', english: 'Travel / Trip', partOfSpeech: 'noun', category: 'daily', level: 'intermediate', imagePrompt: 'cute kawaii suitcase world travel' },
   { id: 'da_14', korean: '운동', romanization: 'undong', english: 'Exercise', partOfSpeech: 'noun', category: 'daily', level: 'beginner', imagePrompt: 'cute kawaii person exercising jumping' },
   { id: 'da_15', korean: '사진', romanization: 'sajin', english: 'Photo', partOfSpeech: 'noun', category: 'daily', level: 'beginner', imagePrompt: 'cute kawaii camera taking photo' },
+
+  // === BODY PARTS (12 words) ===
+  { id: 'bo_1', korean: '머리', romanization: 'meori', english: 'Head / Hair', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii person pointing at head' },
+  { id: 'bo_2', korean: '눈', romanization: 'nun', english: 'Eye', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii big sparkling eye' },
+  { id: 'bo_3', korean: '코', romanization: 'ko', english: 'Nose', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii round nose face' },
+  { id: 'bo_4', korean: '입', romanization: 'ip', english: 'Mouth', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii smiling mouth lips' },
+  { id: 'bo_5', korean: '귀', romanization: 'gwi', english: 'Ear', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii bunny ears listening' },
+  { id: 'bo_6', korean: '손', romanization: 'son', english: 'Hand', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii waving hand' },
+  { id: 'bo_7', korean: '발', romanization: 'bal', english: 'Foot', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii foot with socks' },
+  { id: 'bo_8', korean: '다리', romanization: 'dari', english: 'Leg', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii person walking legs' },
+  { id: 'bo_9', korean: '팔', romanization: 'pal', english: 'Arm', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii strong arm flexing' },
+  { id: 'bo_10', korean: '배', romanization: 'bae', english: 'Stomach / Belly', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii round tummy' },
+  { id: 'bo_11', korean: '얼굴', romanization: 'eolgul', english: 'Face', partOfSpeech: 'noun', category: 'body', level: 'beginner', imagePrompt: 'cute kawaii friendly face portrait' },
+  { id: 'bo_12', korean: '어깨', romanization: 'eokkae', english: 'Shoulder', partOfSpeech: 'noun', category: 'body', level: 'intermediate', imagePrompt: 'cute kawaii person shrugging shoulders' },
+
+  // === WEATHER & SEASONS (12 words) ===
+  { id: 'we_1', korean: '날씨', romanization: 'nalssi', english: 'Weather', partOfSpeech: 'noun', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii weather forecast icons' },
+  { id: 'we_2', korean: '비', romanization: 'bi', english: 'Rain', partOfSpeech: 'noun', category: 'weather', level: 'beginner', example: { korean: '비가 와요', english: 'It is raining', romanization: 'biga wayo' }, imagePrompt: 'cute kawaii rain drops umbrella' },
+  { id: 'we_3', korean: '바람', romanization: 'baram', english: 'Wind', partOfSpeech: 'noun', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii wind blowing leaves' },
+  { id: 'we_4', korean: '구름', romanization: 'gureum', english: 'Cloud', partOfSpeech: 'noun', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii fluffy white clouds' },
+  { id: 'we_5', korean: '하늘', romanization: 'haneul', english: 'Sky', partOfSpeech: 'noun', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii blue sky with birds' },
+  { id: 'we_6', korean: '봄', romanization: 'bom', english: 'Spring', partOfSpeech: 'noun', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii cherry blossom spring' },
+  { id: 'we_7', korean: '여름', romanization: 'yeoreum', english: 'Summer', partOfSpeech: 'noun', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii sunny beach summer' },
+  { id: 'we_8', korean: '가을', romanization: 'gaeul', english: 'Autumn / Fall', partOfSpeech: 'noun', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii falling autumn leaves' },
+  { id: 'we_9', korean: '겨울', romanization: 'gyeoul', english: 'Winter', partOfSpeech: 'noun', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii snowman winter snow' },
+  { id: 'we_10', korean: '덥다', romanization: 'deopda', english: 'Hot (weather)', partOfSpeech: 'adjective', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii sweating in heat' },
+  { id: 'we_11', korean: '춥다', romanization: 'chupda', english: 'Cold (weather)', partOfSpeech: 'adjective', category: 'weather', level: 'beginner', imagePrompt: 'cute kawaii shivering cold person' },
+  { id: 'we_12', korean: '따뜻하다', romanization: 'ttatteuthada', english: 'Warm', partOfSpeech: 'adjective', category: 'weather', level: 'intermediate', imagePrompt: 'cute kawaii warm cozy blanket' },
+
+  // === EMOTIONS (12 words) ===
+  { id: 'em_1', korean: '사랑', romanization: 'sarang', english: 'Love', partOfSpeech: 'noun', category: 'emotions', level: 'beginner', example: { korean: '사랑해요', english: 'I love you', romanization: 'saranghaeyo' }, imagePrompt: 'cute kawaii heart love floating' },
+  { id: 'em_2', korean: '기쁘다', romanization: 'gippeuda', english: 'Happy / Glad', partOfSpeech: 'adjective', category: 'emotions', level: 'beginner', imagePrompt: 'cute kawaii joyful face smiling' },
+  { id: 'em_3', korean: '슬프다', romanization: 'seulpeuda', english: 'Sad', partOfSpeech: 'adjective', category: 'emotions', level: 'beginner', imagePrompt: 'cute kawaii sad face teardrop' },
+  { id: 'em_4', korean: '화나다', romanization: 'hwanada', english: 'Angry', partOfSpeech: 'verb', category: 'emotions', level: 'beginner', imagePrompt: 'cute kawaii angry red face' },
+  { id: 'em_5', korean: '무섭다', romanization: 'museopda', english: 'Scary / Afraid', partOfSpeech: 'adjective', category: 'emotions', level: 'beginner', imagePrompt: 'cute kawaii scared hiding face' },
+  { id: 'em_6', korean: '행복하다', romanization: 'haengbokhada', english: 'Happy / Blissful', partOfSpeech: 'adjective', category: 'emotions', level: 'beginner', imagePrompt: 'cute kawaii blissful happy sunshine' },
+  { id: 'em_7', korean: '외롭다', romanization: 'oeropda', english: 'Lonely', partOfSpeech: 'adjective', category: 'emotions', level: 'intermediate', imagePrompt: 'cute kawaii lonely person rain' },
+  { id: 'em_8', korean: '기분', romanization: 'gibun', english: 'Mood / Feeling', partOfSpeech: 'noun', category: 'emotions', level: 'beginner', imagePrompt: 'cute kawaii mood emoji faces' },
+  { id: 'em_9', korean: '감동', romanization: 'gamdong', english: 'Touched / Moved', partOfSpeech: 'noun', category: 'emotions', level: 'intermediate', imagePrompt: 'cute kawaii touched crying happy' },
+  { id: 'em_10', korean: '걱정', romanization: 'geokjeong', english: 'Worry / Anxiety', partOfSpeech: 'noun', category: 'emotions', level: 'beginner', imagePrompt: 'cute kawaii worried thinking cloud' },
+  { id: 'em_11', korean: '부끄럽다', romanization: 'bukkeuleopda', english: 'Embarrassed / Shy', partOfSpeech: 'adjective', category: 'emotions', level: 'intermediate', imagePrompt: 'cute kawaii blushing shy face' },
+  { id: 'em_12', korean: '심심하다', romanization: 'simsimhada', english: 'Bored', partOfSpeech: 'adjective', category: 'emotions', level: 'beginner', imagePrompt: 'cute kawaii bored yawning face' },
+
+  // === ANIMALS (12 words) ===
+  { id: 'an_1', korean: '개', romanization: 'gae', english: 'Dog', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii happy puppy dog' },
+  { id: 'an_2', korean: '고양이', romanization: 'goyangi', english: 'Cat', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii fluffy kitten cat' },
+  { id: 'an_3', korean: '새', romanization: 'sae', english: 'Bird', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii bird singing branch' },
+  { id: 'an_4', korean: '물고기', romanization: 'mulgogi', english: 'Fish', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii colorful fish swimming' },
+  { id: 'an_5', korean: '토끼', romanization: 'tokki', english: 'Rabbit', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii fluffy bunny rabbit' },
+  { id: 'an_6', korean: '소', romanization: 'so', english: 'Cow', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii friendly cow farm' },
+  { id: 'an_7', korean: '돼지', romanization: 'dwaeji', english: 'Pig', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii pink pig oink' },
+  { id: 'an_8', korean: '강아지', romanization: 'gangaji', english: 'Puppy', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii tiny puppy wagging tail' },
+  { id: 'an_9', korean: '거북이', romanization: 'geobuki', english: 'Turtle', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii green turtle shell' },
+  { id: 'an_10', korean: '개구리', romanization: 'gaeguri', english: 'Frog', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii green frog lily pad' },
+  { id: 'an_11', korean: '개미', romanization: 'gaemi', english: 'Ant', partOfSpeech: 'noun', category: 'animals', level: 'beginner', imagePrompt: 'cute kawaii ant carrying leaf' },
+  { id: 'an_12', korean: '거미', romanization: 'geomi', english: 'Spider', partOfSpeech: 'noun', category: 'animals', level: 'intermediate', imagePrompt: 'cute kawaii friendly spider web' },
+
+  // === COMMON OBJECTS (12 words) ===
+  { id: 'ob_1', korean: '가방', romanization: 'gabang', english: 'Bag', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii school bag backpack' },
+  { id: 'ob_2', korean: '가위', romanization: 'gawi', english: 'Scissors', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii colorful scissors cutting' },
+  { id: 'ob_3', korean: '거울', romanization: 'geoul', english: 'Mirror', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii oval mirror reflection' },
+  { id: 'ob_4', korean: '가구', romanization: 'gagu', english: 'Furniture', partOfSpeech: 'noun', category: 'objects', level: 'intermediate', imagePrompt: 'cute kawaii cozy room furniture' },
+  { id: 'ob_5', korean: '우산', romanization: 'usan', english: 'Umbrella', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii colorful umbrella rain' },
+  { id: 'ob_6', korean: '열쇠', romanization: 'yeolsoe', english: 'Key', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii golden key sparkle' },
+  { id: 'ob_7', korean: '시계', romanization: 'sigye', english: 'Watch / Clock', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii ticking clock watch' },
+  { id: 'ob_8', korean: '안경', romanization: 'angyeong', english: 'Glasses', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii round glasses spectacles' },
+  { id: 'ob_9', korean: '컴퓨터', romanization: 'keompyuteo', english: 'Computer', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii desktop computer screen' },
+  { id: 'ob_10', korean: '핸드폰', romanization: 'haendeupon', english: 'Cell phone', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii smartphone ringing' },
+  { id: 'ob_11', korean: '냉장고', romanization: 'naengjanggo', english: 'Refrigerator', partOfSpeech: 'noun', category: 'objects', level: 'intermediate', imagePrompt: 'cute kawaii fridge full of food' },
+  { id: 'ob_12', korean: '침대', romanization: 'chimdae', english: 'Bed', partOfSpeech: 'noun', category: 'objects', level: 'beginner', imagePrompt: 'cute kawaii cozy bed pillow' },
 ];
 
 export function getWordsByCategory(category: VocabCategory): VocabWord[] {
@@ -201,4 +276,4 @@ export function getWordById(id: string): VocabWord | undefined {
   return vocabulary.find((w) => w.id === id);
 }
 
-export const allCategories: VocabCategory[] = ['greetings', 'numbers', 'family', 'food', 'colors', 'time', 'places', 'verbs', 'adjectives', 'daily'];
+export const allCategories: VocabCategory[] = ['greetings', 'numbers', 'family', 'food', 'colors', 'time', 'places', 'verbs', 'adjectives', 'daily', 'body', 'weather', 'emotions', 'animals', 'objects'];

@@ -15,7 +15,7 @@ import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme'
 import { useAppStore } from '@/lib/store';
 import { getSentencesByLevel, sentenceLevels } from '@/data/sentences';
 import type { Sentence } from '@/data/sentences';
-import { speakKorean } from '@/lib/audio';
+import { speakKorean, speakKoreanSlow } from '@/lib/audio';
 import { SpeechPractice } from '@/components/common/SpeechPractice';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -74,6 +74,29 @@ export default function SentencePracticeScreen() {
     setTimeout(() => {
       setIsPlaying(false);
     }, 2000);
+  }, [sentence, pulseAnim]);
+
+  const handlePlaySlow = useCallback(() => {
+    if (!sentence) return;
+    setIsPlaying(true);
+    speakKoreanSlow(sentence.korean);
+
+    Animated.sequence([
+      Animated.timing(pulseAnim, {
+        toValue: 1.1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(pulseAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    setTimeout(() => {
+      setIsPlaying(false);
+    }, 3500);
   }, [sentence, pulseAnim]);
 
   const handleNext = useCallback(() => {
@@ -184,23 +207,36 @@ export default function SentencePracticeScreen() {
             <Text style={styles.sentenceEnglish}>{sentence.english}</Text>
           )}
 
-          {/* Play Button */}
-          <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
+          {/* Play Buttons */}
+          <View style={styles.playRow}>
+            <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
+              <TouchableOpacity
+                onPress={handlePlay}
+                style={[
+                  styles.playButton,
+                  isPlaying && styles.playButtonActive,
+                ]}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name={isPlaying ? 'volume-high' : 'play'}
+                  size={32}
+                  color="#fff"
+                />
+              </TouchableOpacity>
+            </Animated.View>
             <TouchableOpacity
-              onPress={handlePlay}
+              onPress={handlePlaySlow}
               style={[
-                styles.playButton,
-                isPlaying && styles.playButtonActive,
+                styles.slowButton,
+                isPlaying && styles.slowButtonActive,
               ]}
               activeOpacity={0.7}
             >
-              <Ionicons
-                name={isPlaying ? 'volume-high' : 'play'}
-                size={32}
-                color="#fff"
-              />
+              <Ionicons name="speedometer-outline" size={20} color="#fff" />
+              <Text style={styles.slowButtonText}>Slow</Text>
             </TouchableOpacity>
-          </Animated.View>
+          </View>
           <Text style={styles.playHint}>
             {step === 'listen'
               ? 'Tap to listen'
@@ -480,6 +516,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: spacing.xs,
   },
+  playRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    marginTop: spacing.md,
+  },
   playButton: {
     width: 64,
     height: 64,
@@ -487,11 +529,27 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: spacing.md,
     ...shadows.glow,
   },
   playButtonActive: {
     backgroundColor: colors.primaryDark,
+  },
+  slowButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.textTertiary,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.full,
+  },
+  slowButtonActive: {
+    backgroundColor: colors.primaryDark,
+  },
+  slowButtonText: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 13,
+    color: '#fff',
   },
   playHint: {
     fontFamily: 'Poppins-Regular',

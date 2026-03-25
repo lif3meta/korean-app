@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ImageSourc
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { shadows } from '@/lib/theme';
+import { shadows, spacing } from '@/lib/theme';
 import { useAppStore } from '@/lib/store';
 
 interface PracticeItem {
@@ -42,7 +42,7 @@ export default function PracticeScreen() {
   ];
 
   const toolsSection: PracticeItem[] = [
-    { id: 'sleep', title: 'Sleep Learning', titleKorean: '수면 학습', icon: 'moon', iconColor: '#5C6BC0', bgColor: '#E8EAF6', desc: 'Repeat words while resting', route: '/sleep', image: require('@/assets/images/sloth-sleep.png') },
+    { id: 'sleep', title: 'Parrot Learning', titleKorean: '반말 학습', icon: 'moon', iconColor: '#5C6BC0', bgColor: '#E8EAF6', desc: 'Repeat words on repeat', route: '/sleep', image: require('@/assets/images/sloth-sleep.png') },
     { id: 'dictionary', title: 'Dictionary', titleKorean: '사전', icon: 'search', iconColor: '#FF5722', bgColor: '#FBE9E7', desc: '384+ Korean words', route: '/dictionary', image: require('@/assets/images/sloth-dictionary.png') },
     { id: 'mywords', title: 'My Words', titleKorean: '내 단어', icon: 'bookmark', iconColor: '#FF9800', bgColor: '#FFF3E0', desc: 'Your saved vocabulary', route: '/my-words', image: require('@/assets/images/sloth-mywords.png') },
     { id: 'videos', title: 'Watch & Learn', titleKorean: '영상 보기', icon: 'play-circle', iconColor: '#F44336', bgColor: '#FFEBEE', desc: 'K-drama YouTube lessons', route: '/lesson/videos', image: require('@/assets/images/sloth-watch.png') },
@@ -51,7 +51,7 @@ export default function PracticeScreen() {
   const recentResults = quizHistory.slice(0, 3);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xxxl }} showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View>
