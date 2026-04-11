@@ -2,7 +2,7 @@
   "expo": {
     "name": "Lzy Learn Korean",
     "slug": "korean-app",
-    "version": "1.0.0",
+    "version": "1.5.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -11,14 +11,20 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1A0A2E"
+      "backgroundColor": "#0f172a"
     },
     "ios": {
-      "backgroundColor": "#ffffff",
-      "supportsTablet": true,
+      "backgroundColor": "#0f172a",
+      "splash": {
+        "image": "./assets/splash-icon.png",
+        "backgroundColor": "#0f172a"
+      },
+      "supportsTablet": false,
+      "buildNumber": "22",
       "bundleIdentifier": "com.hanflow.korean",
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Lzy Learn Korean needs microphone access so you can practice speaking Korean and get pronunciation feedback."
+        "NSMicrophoneUsageDescription": "Lzy Learn Korean needs microphone access so you can practice speaking Korean and get pronunciation feedback.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -33,10 +39,17 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "react-native-iap"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "apiBaseUrl": "https://hanflow-tts-proxy.vercel.app",
+      "eas": {
+        "projectId": "d223b85b-3dd0-4e2f-b1be-995d96287446"
+      }
     }
   }
 }

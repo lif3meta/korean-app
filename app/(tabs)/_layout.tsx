@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
-import { Tabs } from 'expo-router';
+import { Tabs, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, shadows } from '@/lib/theme';
+import { useAppStore } from '@/lib/store';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const isPremium = useAppStore((s) => s.isPremium);
+  const purchasesInitialized = useAppStore((s) => s.purchasesInitialized);
+
+  useEffect(() => {
+    if (purchasesInitialized && !isPremium) {
+      router.replace('/paywall' as any);
+    }
+  }, [isPremium, purchasesInitialized]);
 
   return (
     <Tabs
