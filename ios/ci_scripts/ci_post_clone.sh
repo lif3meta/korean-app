@@ -14,3 +14,6 @@ npm install
 echo "Running pod install..."
 cd "$CI_PRIMARY_REPOSITORY_PATH/ios"
 pod install
+
+echo "Setting NODE_ENV for build phases..."
+echo "export NODE_ENV=production" >> "$CI_PRIMARY_REPOSITORY_PATH/ios/.xcode.env"
