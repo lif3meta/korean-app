@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Alert, Linking, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme';
 import { useAppStore } from '@/lib/store';
+import { restorePurchases, checkSubscriptionStatus } from '@/lib/purchases';
 
 export default function SettingsScreen() {
   const store = useAppStore();
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState(store.userName || '');
 
   const handleReset = () => {
     Alert.alert(
@@ -18,10 +22,87 @@ export default function SettingsScreen() {
     );
   };
 
+  const [restoringPurchases, setRestoringPurchases] = useState(false);
+
+  const refreshSubscriptionState = async () => {
+    const status = await checkSubscriptionStatus();
+    store.setSubscriptionStatus(status.isPremium, status.expirationDate, status.willRenew);
+    return status;
+  };
+
+  const handleRestore = async () => {
+    setRestoringPurchases(true);
+    try {
+      const restored = await restorePurchases();
+      const status = await refreshSubscriptionState();
+      if (restored && status.isPremium) {
+        Alert.alert('Restored', 'Your subscription has been restored.');
+      } else {
+        Alert.alert('No Subscription Found', 'We could not find an active subscription for your account.');
+      }
+    } catch (e: any) {
+      Alert.alert('Restore Failed', e.message || 'Something went wrong.');
+    } finally {
+      setRestoringPurchases(false);
+    }
+  };
+
+  const handleManageSubscription = () => {
+    Linking.openURL('https://apps.apple.com/account/subscriptions');
+  };
+
+  const getSubscriptionLabel = () => {
+    if (!store.isPremium) return 'Inactive';
+    if (store.subscriptionExpirationDate) {
+      const expDate = new Date(store.subscriptionExpirationDate);
+      return `Active until ${expDate.toLocaleDateString()}`;
+    }
+    return 'Active';
+  };
+
   const dailyGoalOptions = [5, 10, 15, 30];
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
+      {/* Profile */}
+      <Text style={styles.sectionTitle}>Profile</Text>
+      <View style={styles.section}>
+        <View style={styles.row}>
+          <View style={styles.rowLeft}>
+            <Ionicons name="person" size={20} color={colors.primary} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.rowTitle}>Name</Text>
+              {editingName ? (
+                <TextInput
+                  style={styles.nameInput}
+                  value={nameInput}
+                  onChangeText={setNameInput}
+                  placeholder="Enter your name"
+                  placeholderTextColor={colors.textTertiary}
+                  autoFocus
+                  autoCapitalize="words"
+                  onBlur={() => {
+                    const trimmed = nameInput.trim();
+                    if (trimmed) store.setUserName(trimmed);
+                    setEditingName(false);
+                  }}
+                  onSubmitEditing={() => {
+                    const trimmed = nameInput.trim();
+                    if (trimmed) store.setUserName(trimmed);
+                    setEditingName(false);
+                  }}
+                />
+              ) : (
+                <Text style={styles.rowSub}>{store.userName || 'Learner'}</Text>
+              )}
+            </View>
+          </View>
+          <TouchableOpacity onPress={() => { setNameInput(store.userName || ''); setEditingName(true); }}>
+            <Ionicons name={editingName ? 'checkmark' : 'pencil'} size={18} color={colors.primary} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {/* Learning Preferences */}
       <Text style={styles.sectionTitle}>Learning</Text>
       <View style={styles.section}>
@@ -30,7 +111,7 @@ export default function SettingsScreen() {
             <Ionicons name="text" size={20} color={colors.primary} />
             <View>
               <Text style={styles.rowTitle}>Show Romanization</Text>
-              <Text style={styles.rowSub}>Display pronunciation guide for Korean text</Text>
+              <Text style={styles.rowSub}>Display romanization hints under Korean text</Text>
             </View>
           </View>
           <Switch
@@ -71,7 +152,7 @@ export default function SettingsScreen() {
         <View style={styles.row}>
           <View style={styles.rowLeft}>
             <Ionicons name="volume-high" size={20} color={colors.accent} />
-            <Text style={styles.rowTitle}>Sound Effects</Text>
+            <Text style={styles.rowTitle}>Lesson Audio</Text>
           </View>
           <Switch
             value={store.soundEnabled}
@@ -97,6 +178,40 @@ export default function SettingsScreen() {
         </View>
       </View>
 
+      {/* Subscription */}
+      <Text style={styles.sectionTitle}>Subscription</Text>
+      <View style={styles.section}>
+        <View style={styles.row}>
+          <View style={styles.rowLeft}>
+            <Ionicons name={store.isPremium ? 'checkmark-circle' : 'card'} size={20} color={store.isPremium ? colors.success : colors.primary} />
+            <View>
+              <Text style={styles.rowTitle}>Premium</Text>
+              <Text style={styles.rowSub}>{getSubscriptionLabel()}</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.divider} />
+
+        <TouchableOpacity onPress={handleManageSubscription} style={styles.row}>
+          <View style={styles.rowLeft}>
+            <Ionicons name="settings" size={20} color={colors.primary} />
+            <Text style={styles.rowTitle}>Manage Subscription</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />
+        </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        <TouchableOpacity onPress={handleRestore} disabled={restoringPurchases} style={styles.row}>
+          <View style={styles.rowLeft}>
+            <Ionicons name="refresh" size={20} color={colors.primary} />
+            <Text style={styles.rowTitle}>{restoringPurchases ? 'Restoring...' : 'Restore Purchases'}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />
+        </TouchableOpacity>
+      </View>
+
       {/* Danger Zone */}
       <Text style={styles.sectionTitle}>Data</Text>
       <View style={styles.section}>
@@ -109,11 +224,43 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* Legal */}
+      <Text style={styles.sectionTitle}>Legal</Text>
+      <View style={styles.section}>
+        <TouchableOpacity onPress={() => Linking.openURL('https://ulbmedia.com/terms/lzy-learn-korean')} style={styles.row}>
+          <View style={styles.rowLeft}>
+            <Ionicons name="document-text" size={20} color={colors.primary} />
+            <Text style={styles.rowTitle}>Terms of Use</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />
+        </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        <TouchableOpacity onPress={() => Linking.openURL('https://ulbmedia.com/privacy/lzy-learn-korean')} style={styles.row}>
+          <View style={styles.rowLeft}>
+            <Ionicons name="shield-checkmark" size={20} color={colors.primary} />
+            <Text style={styles.rowTitle}>Privacy Policy</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />
+        </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/')} style={styles.row}>
+          <View style={styles.rowLeft}>
+            <Ionicons name="reader" size={20} color={colors.primary} />
+            <Text style={styles.rowTitle}>Apple EULA</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />
+        </TouchableOpacity>
+      </View>
+
       {/* About */}
       <View style={styles.aboutSection}>
         <Text style={styles.aboutTitle}>Lzy Learn Korean</Text>
-       
-        <Text style={styles.aboutVersion}>Version 1.0.0</Text>
+
+        <Text style={styles.aboutVersion}>Version {Constants.expoConfig?.version ?? '1.0.0'}</Text>
         <Text style={styles.aboutText}>Learn Korean the lazy but fun way</Text>
       </View>
     </ScrollView>
@@ -138,6 +285,7 @@ const styles = StyleSheet.create({
   rowLeft: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, flex: 1 },
   rowTitle: { ...typography.body, color: colors.textPrimary },
   rowSub: { ...typography.caption, color: colors.textTertiary },
+  nameInput: { ...typography.body, color: colors.textPrimary, borderBottomWidth: 1, borderBottomColor: colors.primary, paddingVertical: 4, marginTop: 2 },
   divider: { height: 1, backgroundColor: colors.borderLight, marginHorizontal: spacing.lg },
   goalRow: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.lg, paddingBottom: spacing.lg },
   goalBtn: {

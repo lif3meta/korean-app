@@ -1,3 +1,27 @@
+import Constants from 'expo-constants';
+
+export function getApiBaseUrl(): string {
+  const configured = Constants.expoConfig?.extra?.apiBaseUrl;
+  if (typeof configured === 'string' && configured.length > 0) return configured;
+  return 'http://127.0.0.1:8787';
+}
+
+export async function geminiProxy(
+  contents: unknown[],
+  generationConfig?: Record<string, unknown>,
+  model?: string,
+  signal?: AbortSignal,
+): Promise<Record<string, unknown>> {
+  const response = await fetch(`${getApiBaseUrl()}/api/gemini-proxy`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents, generationConfig, model }),
+    signal,
+  });
+  if (!response.ok) throw new Error(`Gemini proxy error: ${response.status}`);
+  return response.json();
+}
+
 export function getToday(): string {
   return new Date().toISOString().split('T')[0];
 }

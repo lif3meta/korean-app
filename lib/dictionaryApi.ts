@@ -1,16 +1,10 @@
 import { DictionaryEntry } from '@/data/dictionary';
+import { geminiProxy } from '@/lib/utils';
 
-// In-memory cache for API results
 const apiCache = new Map<string, { entries: DictionaryEntry[]; timestamp: number }>();
-const CACHE_TTL = 1000 * 60 * 60; // 1 hour
+const CACHE_TTL = 1000 * 60 * 60;
 
-// Abort controller for cancelling in-flight requests
 let currentController: AbortController | null = null;
-
-/**
- * Search the Korean Learners' Dictionary API (krdict) for Korean-English entries.
- * Falls back to Pollinations AI if krdict fails or returns no results.
- */
 export async function searchDictionaryApi(query: string): Promise<DictionaryEntry[]> {
   const q = query.trim();
   if (!q || q.length < 1) return [];
@@ -30,7 +24,7 @@ export async function searchDictionaryApi(query: string): Promise<DictionaryEntr
   const { signal } = currentController;
 
   try {
-    const results = await fetchFromPollinations(q, signal);
+    const results = await fetchFromGemini(q, signal);
     if (results.length > 0) {
       apiCache.set(cacheKey, { entries: results, timestamp: Date.now() });
     }
@@ -45,10 +39,9 @@ export async function searchDictionaryApi(query: string): Promise<DictionaryEntr
 }
 
 /**
- * Use Pollinations AI to generate dictionary entries.
- * Free, no API key required, supports Korean-English translation.
+ * Use Gemini AI to generate dictionary entries.
  */
-async function fetchFromPollinations(
+async function fetchFromGemini(
   query: string,
   signal: AbortSignal
 ): Promise<DictionaryEntry[]> {
@@ -78,22 +71,13 @@ Each entry must have exactly these fields:
 Include the most common/useful Korean words for "${query}".
 ONLY return valid JSON array, no markdown, no explanation.`;
 
-  const response = await fetch('https://text.pollinations.ai/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      messages: [{ role: 'user', content: prompt }],
-      model: 'openai',
-      jsonMode: true,
-    }),
+  const data = await geminiProxy(
+    [{ parts: [{ text: prompt }] }],
+    { responseMimeType: 'application/json', maxOutputTokens: 1024 },
+    undefined,
     signal,
-  });
-
-  if (!response.ok) {
-    throw new Error(`Pollinations API error: ${response.status}`);
-  }
-
-  const text = await response.text();
+  ) as any;
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
 
   // Parse the response - extract JSON array from the text
   const entries = parseApiResponse(text);
