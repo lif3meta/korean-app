@@ -36,9 +36,8 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# android (ios is committed for Xcode Cloud)
+# android (ios + Pods committed for Xcode Cloud)
 /android
-ios/Pods/
 ios/build/
 ios/.xcode.env.local
 .vercel

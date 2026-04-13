@@ -1,0 +1,6 @@
+module Pods_LzyLearnKorean {
+  umbrella header "Pods-LzyLearnKorean-umbrella.h"
+
+  export *
+  module * { export * }
+}
