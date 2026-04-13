@@ -1,25 +1,22 @@
 #!/bin/sh
 set -e
 
-# Set environment for Expo build phase scripts
-export NODE_ENV=production
-
-echo "Installing Node.js..."
+echo "=== Installing Node.js ==="
 brew install node
+NODE_PATH=$(which node)
+echo "Node installed at: $NODE_PATH"
 
-echo "Installing CocoaPods..."
-brew install cocoapods
-
-echo "Installing npm dependencies..."
+echo "=== Installing npm dependencies ==="
 cd "$CI_PRIMARY_REPOSITORY_PATH"
 npm install
 
-echo "Running pod install..."
-cd "$CI_PRIMARY_REPOSITORY_PATH/ios"
-pod install
+echo "=== Configuring .xcode.env for build phases ==="
+cat > "$CI_PRIMARY_REPOSITORY_PATH/ios/.xcode.env" << EOF
+export NODE_BINARY=$NODE_PATH
+export NODE_ENV=production
+EOF
 
-# Ensure NODE_ENV is available during xcodebuild
-echo "export NODE_ENV=production" >> "$CI_PRIMARY_REPOSITORY_PATH/ios/.xcode.env"
+echo "=== .xcode.env contents ==="
+cat "$CI_PRIMARY_REPOSITORY_PATH/ios/.xcode.env"
 
-# Set NODE_BINARY to the brew-installed node for build phases
-echo "export NODE_BINARY=$(which node)" >> "$CI_PRIMARY_REPOSITORY_PATH/ios/.xcode.env"
+echo "=== Done ==="
