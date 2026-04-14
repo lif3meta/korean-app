@@ -19,4 +19,8 @@ EOF
 echo "=== .xcode.env contents ==="
 cat "$CI_PRIMARY_REPOSITORY_PATH/ios/.xcode.env"
 
+echo "=== Running pod install to generate React Native Codegen files ==="
+cd "$CI_PRIMARY_REPOSITORY_PATH/ios"
+pod install
+
 echo "=== Done ==="
