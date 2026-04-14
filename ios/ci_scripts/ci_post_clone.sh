@@ -14,6 +14,7 @@ echo "=== Configuring .xcode.env for build phases ==="
 cat > "$CI_PRIMARY_REPOSITORY_PATH/ios/.xcode.env" << EOF
 export NODE_BINARY=$NODE_PATH
 export NODE_ENV=production
+export NODE_OPTIONS=--max-old-space-size=8192
 EOF
 
 echo "=== .xcode.env contents ==="
