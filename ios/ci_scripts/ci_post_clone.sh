@@ -2,13 +2,15 @@
 set -e
 
 echo "=== Installing Node.js ==="
-brew install node
+NODE_VERSION="22.15.0"
+curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-darwin-arm64.tar.xz" | tar -xJ -C /tmp
+export PATH="/tmp/node-v${NODE_VERSION}-darwin-arm64/bin:$PATH"
 NODE_PATH=$(which node)
-echo "Node installed at: $NODE_PATH"
+echo "Node installed at: $NODE_PATH (v$(node --version))"
 
 echo "=== Installing npm dependencies ==="
 cd "$CI_PRIMARY_REPOSITORY_PATH"
-npm install
+npm ci
 
 echo "=== Configuring .xcode.env for build phases ==="
 cat > "$CI_PRIMARY_REPOSITORY_PATH/ios/.xcode.env" << EOF
