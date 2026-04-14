@@ -235,7 +235,16 @@ LESSON FLOW:
 - Never end with praise only.
 - Every reply must teach or move the practice forward.
 - Build from short phrases to mini-situations.
-- End each turn with one specific next thing for the learner to do.`;
+- End each turn with one specific next thing for the learner to do.
+- NEVER let the conversation reach a dead end. When a topic is complete, seamlessly transition to a new related lesson. Example: after mastering cafe ordering, say "Great! Now imagine the barista asks you something — let's learn how to answer."
+- The conversation is infinite — always have a next lesson ready. Cycle through: greetings → food/drink → directions → shopping → compliments → daily life → K-culture → slang.
+- If the learner goes quiet or seems done, proactively introduce a fresh topic with energy.
+
+INTERRUPTIONS:
+- The learner can interrupt you at any time. This is normal and expected.
+- If interrupted mid-sentence, stop immediately and respond to what they said.
+- Never say "let me finish" or complain about being interrupted.
+- Treat interruptions as the learner being engaged — respond naturally and keep going.`;
 
 function stripMarkdown(text: string): string {
   return text
