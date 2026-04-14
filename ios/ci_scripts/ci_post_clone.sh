@@ -3,10 +3,16 @@ set -e
 
 echo "=== Installing Node.js ==="
 NODE_VERSION="22.15.0"
-curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-darwin-arm64.tar.xz" | tar -xJ -C /tmp
-export PATH="/tmp/node-v${NODE_VERSION}-darwin-arm64/bin:$PATH"
+ARCH=$(uname -m)
+if [ "$ARCH" = "arm64" ]; then
+  NODE_ARCH="darwin-arm64"
+else
+  NODE_ARCH="darwin-x64"
+fi
+curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-${NODE_ARCH}.tar.xz" | tar -xJ -C /tmp
+export PATH="/tmp/node-v${NODE_VERSION}-${NODE_ARCH}/bin:$PATH"
 NODE_PATH=$(which node)
-echo "Node installed at: $NODE_PATH (v$(node --version))"
+echo "Node installed at: $NODE_PATH (v$(node --version)) arch: $ARCH"
 
 echo "=== Installing npm dependencies ==="
 cd "$CI_PRIMARY_REPOSITORY_PATH"
