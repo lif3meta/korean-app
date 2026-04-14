@@ -3,7 +3,8 @@ import { TouchableOpacity, StyleSheet, ViewStyle, ActivityIndicator } from 'reac
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { colors } from '@/lib/theme';
-import { speakKoreanAsync, speakKoreanSlow } from '@/lib/audio';
+import type { HangulCharacter } from '@/data/hangul';
+import { playAudioCueAsync, resolvePronunciationAudioCue } from '@/lib/audio';
 import { useAppStore } from '@/lib/store';
 
 interface AudioButtonProps {
@@ -11,27 +12,44 @@ interface AudioButtonProps {
   size?: 'sm' | 'md' | 'lg';
   color?: string;
   style?: ViewStyle;
-  slow?: boolean;
+  audioType?: 'korean_text' | 'hangul_sound' | 'pronunciation';
+  hangulCharacter?: string | HangulCharacter;
+  accessibilityLabel?: string;
 }
 
-export function AudioButton({ text, size = 'md', color = colors.primary, style, slow }: AudioButtonProps) {
+export function AudioButton({
+  text,
+  size = 'md',
+  color = colors.primary,
+  style,
+  audioType = 'korean_text',
+  hangulCharacter,
+  accessibilityLabel,
+}: AudioButtonProps) {
   const [state, setState] = useState<'idle' | 'loading' | 'playing'>('idle');
   const hapticEnabled = useAppStore((s) => s.hapticEnabled);
+  const resolvedCue =
+    audioType === 'hangul_sound'
+      ? { kind: 'hangul_sound' as const, value: hangulCharacter ?? text, rate: 0.8 }
+      : audioType === 'pronunciation'
+        ? resolvePronunciationAudioCue(text)
+        : { kind: 'korean_text' as const, text };
+
+  const isPlayable = resolvedCue.kind !== 'disabled';
 
   const handlePress = async () => {
     if (state === 'loading') return;
+    if (!isPlayable) return;
     if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    if (slow) {
-      speakKoreanSlow(text);
-      setState('playing');
-      setTimeout(() => setState('idle'), 2000);
-      return;
-    }
 
     setState('loading');
     try {
-      await speakKoreanAsync(text);
+      const played = await playAudioCueAsync(resolvedCue);
+      if (!played) {
+        setState('idle');
+        return;
+      }
+
       setState('playing');
       setTimeout(() => setState('idle'), 2000);
     } catch {
@@ -46,7 +64,12 @@ export function AudioButton({ text, size = 'md', color = colors.primary, style, 
     <TouchableOpacity
       onPress={handlePress}
       activeOpacity={0.6}
-      disabled={state === 'loading'}
+      disabled={state === 'loading' || !isPlayable}
+      accessibilityRole="button"
+      accessibilityLabel={
+        accessibilityLabel ??
+        `Play ${audioType === 'hangul_sound' ? 'Hangul cue' : 'audio'} for ${text}`
+      }
       style={[
         styles.button,
         {
@@ -54,6 +77,7 @@ export function AudioButton({ text, size = 'md', color = colors.primary, style, 
           height: btnSize,
           borderRadius: btnSize / 2,
           backgroundColor: color + '15',
+          opacity: isPlayable ? 1 : 0.35,
         },
         state !== 'idle' && { backgroundColor: color + '30' },
         style,

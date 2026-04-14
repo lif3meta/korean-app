@@ -50,4 +50,4 @@ with_node \
   --entitlement "/Users/waidz/projects/shorts/korean-app/ios/LzyLearnKorean/LzyLearnKorean.entitlements" \
    \
   --platform "apple" \
-  --packages "@expo/dom-webview" "expo" "expo-asset" "expo-audio" "expo-constants" "expo-dev-launcher" "expo-dev-menu" "expo-file-system" "expo-font" "expo-glass-effect" "expo-haptics" "expo-image" "expo-keep-awake" "expo-linear-gradient" "expo-linking" "expo-router" "expo-splash-screen" "expo-store-review" "expo-symbols" "expo-system-ui"
+  --packages "@expo/dom-webview" "expo" "expo-asset" "expo-audio" "expo-constants" "expo-file-system" "expo-font" "expo-glass-effect" "expo-haptics" "expo-image" "expo-keep-awake" "expo-linear-gradient" "expo-linking" "expo-router" "expo-splash-screen" "expo-store-review" "expo-symbols" "expo-system-ui"

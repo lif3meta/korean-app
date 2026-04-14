@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 export function getApiBaseUrl(): string {
   const configured = Constants.expoConfig?.extra?.apiBaseUrl;
   if (typeof configured === 'string' && configured.length > 0) return configured;
-  return 'http://127.0.0.1:8787';
+  return 'https://hanflow-tts-proxy.vercel.app';
 }
 
 export async function geminiProxy(

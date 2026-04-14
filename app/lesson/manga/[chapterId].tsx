@@ -97,9 +97,7 @@ export default function MangaReaderScreen() {
             <View style={styles.levelPill}>
               <Text style={styles.levelPillText}>Level {chapter.level}</Text>
             </View>
-            <Text style={styles.panelInfo}>
-              {chapter.panels.length} panels
-            </Text>
+           
           </View>
         </View>
 
@@ -203,9 +201,7 @@ function PanelView({
   onSpeakLine: (korean: string) => void;
 }) {
   const localImage = mangaImages[panel.id];
-  const remoteUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(
-    panel.imagePrompt
-  )}?width=800&height=600&model=flux&seed=${seed}&nologo=true`;
+  const remoteUrl = `https://api.dicebear.com/9.x/shapes/png?seed=${encodeURIComponent(panel.id)}&size=400&backgroundColor=f0f0ff`;
 
   return (
     <View style={styles.panelContainer}>
@@ -297,6 +293,9 @@ function DialogueBubble({
             </TouchableOpacity>
           ))}
         </View>
+
+        {/* Full English translation */}
+        <Text style={styles.fullEnglish}>{dialogue.english}</Text>
 
         {/* Audio Button */}
         <TouchableOpacity
@@ -552,6 +551,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     color: colors.textTertiary,
     marginTop: 1,
+  },
+  fullEnglish: {
+    fontSize: 10,
+    fontFamily: 'Jakarta-Medium',
+    color: colors.textSecondary,
+    fontStyle: 'italic',
+    marginTop: 4,
+    paddingTop: 4,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(0,0,0,0.08)',
   },
   wordKorean: {
     fontFamily: 'Poppins-SemiBold',

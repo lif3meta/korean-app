@@ -7,7 +7,7 @@ import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme'
 import { consonants, doubleConsonants, vowels, compoundVowels, HangulCharacter } from '@/data/hangul';
 import { useAppStore } from '@/lib/store';
 import { getPercentage } from '@/lib/utils';
-import { speakKorean } from '@/lib/audio';
+import { speakHangulCharacter } from '@/lib/audio';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH - 48;
@@ -36,9 +36,9 @@ export default function HangulScreen() {
     setIsFlipped(false);
   };
 
-  const handleSpeak = useCallback((text: string) => {
+  const handleSpeak = useCallback((character: HangulCharacter, rate: number = 0.8) => {
     if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    speakKorean(text);
+    speakHangulCharacter(character, rate);
   }, [hapticEnabled]);
 
   const currentCard = activeData.data[cardIndex] as HangulCharacter | undefined;
@@ -94,15 +94,10 @@ export default function HangulScreen() {
                   <Text style={styles.listName}>{char.name}</Text>
                 </View>
                 <TouchableOpacity
-                  onPress={(e) => { e.stopPropagation(); speakKorean(char.sound, 0.4); }}
+                  onPress={(e) => { e.stopPropagation(); handleSpeak(char); markCharacterLearned(char.id); }}
                   hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                  style={styles.slowBtn}
-                >
-                  <Ionicons name="hourglass-outline" size={22} color={colors.tertiary} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={(e) => { e.stopPropagation(); handleSpeak(char.sound); markCharacterLearned(char.id); }}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Play cue for ${char.character}`}
                   style={styles.playBtn}
                 >
                   <Ionicons name={isLearned ? 'checkmark-circle' : 'play-circle'} size={32} color={isLearned ? colors.success : colors.accent} />
@@ -121,6 +116,12 @@ export default function HangulScreen() {
                 <View style={[styles.card, styles.cardFront]}>
                   <Text style={styles.cardHint}>Tap to flip</Text>
                   <Text style={styles.cardCharacter}>{currentCard.character}</Text>
+                  <View style={styles.cardAudioRow}>
+                    <TouchableOpacity onPress={(e) => { e.stopPropagation(); handleSpeak(currentCard); }} style={styles.cardAudioBtn}>
+                      <Ionicons name="play" size={18} color={colors.primary} />
+                      <Text style={styles.cardAudioLabel}>Listen</Text>
+                    </TouchableOpacity>
+                  </View>
                   <View style={styles.cardBadge}>
                     <Text style={styles.cardBadgeText}>{currentCard.type.replace('_', ' ')}</Text>
                   </View>
@@ -128,9 +129,11 @@ export default function HangulScreen() {
               ) : (
                 <View style={[styles.card, styles.cardBack]}>
                   <Text style={styles.cardHint}>Tap to flip back</Text>
-                  <TouchableOpacity onPress={() => handleSpeak(currentCard.sound)} style={styles.cardSpeakBtn}>
-                    <Ionicons name="volume-high" size={20} color={colors.primary} />
-                  </TouchableOpacity>
+                  <View style={styles.cardSpeakRow}>
+                    <TouchableOpacity onPress={(e) => { e.stopPropagation(); handleSpeak(currentCard); }} style={styles.cardSpeakBtn}>
+                      <Ionicons name="volume-high" size={20} color={colors.primary} />
+                    </TouchableOpacity>
+                  </View>
                   <Text style={styles.cardCharSmall}>{currentCard.character}</Text>
                   <Text style={styles.cardRoman}>{currentCard.romanization}</Text>
                   <Text style={styles.cardName}>{currentCard.name} ({currentCard.nameKorean})</Text>
@@ -226,12 +229,11 @@ const styles = StyleSheet.create({
   listRoman: { fontSize: 15, fontFamily: 'Jakarta-SemiBold', color: colors.textPrimary },
   listName: { fontSize: 12, fontFamily: 'Jakarta-Regular', color: colors.textTertiary },
   playBtn: { padding: 4 },
-  slowBtn: { padding: 4 },
 
   // Cards view
   cardsContainer: { alignItems: 'center', paddingHorizontal: spacing.lg, gap: spacing.md },
   cardCounter: { ...typography.caption, color: colors.textTertiary },
-  cardWrapper: { width: CARD_WIDTH, height: 340 },
+  cardWrapper: { width: CARD_WIDTH, height: 380 },
   card: {
     width: '100%',
     height: '100%',
@@ -244,7 +246,11 @@ const styles = StyleSheet.create({
   cardFront: { backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.primaryPale },
   cardBack: { backgroundColor: colors.primaryPale, borderWidth: 2, borderColor: colors.primary },
   cardHint: { ...typography.caption, color: colors.textTertiary, position: 'absolute', top: spacing.lg, left: spacing.lg },
-  cardSpeakBtn: { position: 'absolute', top: spacing.lg, right: spacing.lg, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.6)', alignItems: 'center', justifyContent: 'center' },
+  cardSpeakBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.6)', alignItems: 'center', justifyContent: 'center' },
+  cardSpeakRow: { position: 'absolute', top: spacing.lg, right: spacing.lg, flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  cardAudioRow: { flexDirection: 'row', gap: spacing.md, marginTop: spacing.md },
+  cardAudioBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: borderRadius.full, backgroundColor: colors.primaryFaint },
+  cardAudioLabel: { fontSize: 12, fontFamily: 'Jakarta-SemiBold', color: colors.primaryDark },
   cardCharacter: { fontSize: 100, color: colors.textPrimary },
   cardCharSmall: { fontSize: 48, color: colors.textPrimary },
   cardRoman: { ...typography.title2, color: colors.textSecondary, marginTop: spacing.xs },

@@ -8,6 +8,7 @@ import { useAppStore } from '@/lib/store';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { AudioButton } from '@/components/common/AudioButton';
+import { LessonAutoplay } from '@/components/common/LessonAutoplay';
 
 export default function CultureLessonScreen() {
   const { lessonId } = useLocalSearchParams<{ lessonId: string }>();
@@ -31,6 +32,8 @@ export default function CultureLessonScreen() {
         <Text style={styles.titleKorean}>{lesson.titleKorean}</Text>
         <Text style={styles.description}>{lesson.description}</Text>
       </View>
+
+      <LessonAutoplay lessonId={lesson.id} title={lesson.title} description={lesson.description} sections={lesson.sections} />
 
       {lesson.sections.map((section, si) => (
         <Card key={si} variant="elevated" style={styles.sectionCard}>

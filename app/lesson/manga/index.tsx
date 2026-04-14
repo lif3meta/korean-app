@@ -77,7 +77,9 @@ function getCoverUrl(series: MangaSeries): string {
       'colorful energetic manga style cover art, K-pop audition stage, spotlights, microphone, dance pose, neon colors, vibrant idol cover',
   };
   const prompt = styleMap[series.id] || series.chapters[0]?.panels[0]?.imagePrompt || '';
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=400&model=flux&seed=42&nologo=true`;
+  // Use local manga cover images if available, otherwise placeholder
+  const seed = encodeURIComponent(`manga-cover-${series.id}`);
+  return `https://api.dicebear.com/9.x/shapes/png?seed=${seed}&size=400&backgroundColor=1a0a2e`;
 }
 
 export default function MangaSeriesScreen() {
@@ -175,12 +177,7 @@ export default function MangaSeriesScreen() {
         })}
       </View>
 
-      <View style={styles.tipBox}>
-        <Ionicons name="bulb-outline" size={20} color={colors.secondary} />
-        <Text style={styles.tipText}>
-          Tap any Korean word while reading to see its English translation
-        </Text>
-      </View>
+    
     </ScrollView>
   );
 }
@@ -313,12 +310,12 @@ function SeriesDetailView({
                     <View style={styles.chapterFooter}>
                       <View style={styles.panelCount}>
                         <Ionicons
-                          name="images-outline"
+                          name="book-outline"
                           size={14}
                           color="rgba(255,255,255,0.7)"
                         />
                         <Text style={styles.panelCountText}>
-                          {chapter.panels.length} panels
+                          Chapter {index + 1}
                         </Text>
                       </View>
                       <Text style={styles.levelLabel}>
@@ -332,12 +329,7 @@ function SeriesDetailView({
           })}
         </View>
 
-        <View style={styles.tipBox}>
-          <Ionicons name="bulb-outline" size={20} color={colors.secondary} />
-          <Text style={styles.tipText}>
-            Tap any Korean word while reading to see its English translation
-          </Text>
-        </View>
+       
       </View>
     </ScrollView>
   );

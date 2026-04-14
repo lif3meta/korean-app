@@ -2719,6 +2719,465 @@ export const mangaSeries: MangaSeries[] = [
           },
         ],
       },
+      // ─────────────────────────────────────────────
+      // Chapter 3: The Library Trap (Level 3)
+      // ─────────────────────────────────────────────
+      {
+        id: 'det-ch3-library-trap',
+        title: 'The Library Trap',
+        titleKorean: '도서관의 함정',
+        level: 3,
+        description: 'Minsu and Jiyoung go to the library at night and discover who took the notebook — and why.',
+        panels: [
+          {
+            id: 'det-ch3-p1',
+            imagePrompt: 'dark moody manga style illustration of two Korean students sneaking into a dark school library at night, tall bookshelves casting long shadows, moonlight streaming through large windows, suspenseful atmosphere, noir lighting',
+            narration: '밤, 민수와 지영은 도서관 3층에 도착합니다.',
+            narrationEnglish: 'At night, Minsu and Jiyoung arrive at the 3rd floor of the library.',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '조용해. 아무도 없는 것 같아.',
+                romanization: 'joyonghae. amudo eomneun geot gata.',
+                english: 'It\'s quiet. Seems like nobody is here.',
+                words: [
+                  { korean: '조용해', english: 'it\'s quiet' },
+                  { korean: '아무도', english: 'nobody' },
+                  { korean: '없는', english: 'not existing' },
+                  { korean: '것 같아', english: 'it seems like' },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'det-ch3-p2',
+            imagePrompt: 'dark moody manga style illustration of a Korean girl spotting a notebook on a reading table in a dark library, dramatic spotlight on the notebook, dust particles in light beam, mysterious atmosphere, tension',
+            dialogue: [
+              {
+                speaker: '지영',
+                speakerEnglish: 'Jiyoung',
+                korean: '민수야, 저기 봐! 노트가 있어!',
+                romanization: 'minsuya, jeogi bwa! noteuga isseo!',
+                english: 'Minsu, look over there! The notebook is there!',
+                words: [
+                  { korean: '저기', english: 'over there' },
+                  { korean: '봐', english: 'look' },
+                  { korean: '노트가', english: 'notebook (subject)' },
+                  { korean: '있어', english: 'there is' },
+                ],
+                position: 'right',
+              },
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '너무 쉽잖아. 이건 함정일 수도 있어.',
+                romanization: 'neomu swipjanha. igeon hamjeongil sudo isseo.',
+                english: 'It\'s too easy. This could be a trap.',
+                words: [
+                  { korean: '너무', english: 'too' },
+                  { korean: '쉽잖아', english: 'it\'s easy, right' },
+                  { korean: '이건', english: 'this is' },
+                  { korean: '함정', english: 'trap' },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'det-ch3-p3',
+            imagePrompt: 'dark moody manga style illustration of a shadowy figure stepping out from behind a bookshelf in a dark library, dramatic reveal moment, one hand visible, dim overhead light, two students turning around in surprise, intense suspense',
+            dialogue: [
+              {
+                speaker: '???',
+                speakerEnglish: 'Unknown voice',
+                korean: '드디어 왔구나.',
+                romanization: 'deudieo watguna.',
+                english: 'You finally came.',
+                words: [
+                  { korean: '드디어', english: 'finally' },
+                  { korean: '왔구나', english: 'you came (realization)' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'det-ch3-p4',
+            imagePrompt: 'dark moody manga style illustration revealing a Korean male student classmate stepping into the light in a library, he has a guilty but relieved expression, school uniform slightly disheveled, dramatic side lighting from window',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '태호?! 네가 노트를 가져간 거야?',
+                romanization: 'taeho?! nega notereul gajyeogan geoya?',
+                english: 'Taeho?! You took the notebook?',
+                words: [
+                  { korean: '네가', english: 'you (subject)' },
+                  { korean: '노트를', english: 'notebook (object)' },
+                  { korean: '가져간', english: 'took' },
+                  { korean: '거야', english: 'is it (casual)' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '태호',
+                speakerEnglish: 'Taeho',
+                korean: '미안해. 설명할게.',
+                romanization: 'mianhae. seolmyeonghalge.',
+                english: 'I\'m sorry. Let me explain.',
+                words: [
+                  { korean: '미안해', english: 'I\'m sorry' },
+                  { korean: '설명할게', english: 'I\'ll explain' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'det-ch3-p5',
+            imagePrompt: 'dark moody manga style illustration of a Korean boy confessing to two classmates in a moonlit library, sitting at a table, head slightly bowed, emotional atmosphere, soft warm lighting contrasting dark surroundings, empathetic scene',
+            dialogue: [
+              {
+                speaker: '태호',
+                speakerEnglish: 'Taeho',
+                korean: '시험 답이 필요했어. 집에 문제가 있어서...',
+                romanization: 'siheom dabi piryohaesseo. jibe munjega isseoseo...',
+                english: 'I needed the test answers. I have problems at home...',
+                words: [
+                  { korean: '시험', english: 'test/exam' },
+                  { korean: '답', english: 'answer' },
+                  { korean: '필요했어', english: 'needed' },
+                  { korean: '집에', english: 'at home' },
+                  { korean: '문제가', english: 'problems (subject)' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'det-ch3-p6',
+            imagePrompt: 'dark moody manga style illustration of a Korean boy detective listening with a serious but compassionate expression, hand on chin thinking, library background with moonlight, thoughtful empathetic atmosphere',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '그래서 내 노트를... 그런데 왜 편지를 남겼어?',
+                romanization: 'geuraeseo nae notereul... geureonde wae pyeonjireul namgyeosseo?',
+                english: 'So you took my notebook... But why did you leave the letter?',
+                words: [
+                  { korean: '그래서', english: 'so / therefore' },
+                  { korean: '그런데', english: 'but / however' },
+                  { korean: '왜', english: 'why' },
+                  { korean: '편지를', english: 'letter (object)' },
+                  { korean: '남겼어', english: 'left behind' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '태호',
+                speakerEnglish: 'Taeho',
+                korean: '양심에 걸렸어. 돌려주고 싶었어.',
+                romanization: 'yangsime geollyeosseo. dollyeojugo sipeosseo.',
+                english: 'My conscience bothered me. I wanted to return it.',
+                words: [
+                  { korean: '양심에', english: 'conscience' },
+                  { korean: '걸렸어', english: 'was bothered' },
+                  { korean: '돌려주고', english: 'return / give back' },
+                  { korean: '싶었어', english: 'wanted to' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'det-ch3-p7',
+            imagePrompt: 'dark moody manga style illustration of a Korean girl looking sympathetically at a distressed classmate in a library, warm moonlight softening the dark atmosphere, emotional moment, compassion visible in her expression',
+            dialogue: [
+              {
+                speaker: '지영',
+                speakerEnglish: 'Jiyoung',
+                korean: '태호야, 힘들었구나. 우리가 도와줄 수 있어.',
+                romanization: 'taehoya, himdeureotkuna. uriga dowajul su isseo.',
+                english: 'Taeho, it must have been hard. We can help you.',
+                words: [
+                  { korean: '힘들었구나', english: 'it must have been hard' },
+                  { korean: '우리가', english: 'we (subject)' },
+                  { korean: '도와줄', english: 'help' },
+                  { korean: '수 있어', english: 'can / are able to' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'det-ch3-p8',
+            imagePrompt: 'dark moody manga style illustration of a Korean boy detective offering a handshake to a guilty classmate in a moonlit library, determined expression, gesture of understanding, tension resolving but mystery still lingers, dramatic composition',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '커닝은 안 돼. 하지만 공부는 같이 하자.',
+                romanization: 'keonningeun an dwae. hajiman gongbuneun gachi haja.',
+                english: 'Cheating is not okay. But let\'s study together.',
+                words: [
+                  { korean: '커닝은', english: 'cheating (topic)' },
+                  { korean: '안 돼', english: 'is not okay' },
+                  { korean: '하지만', english: 'but / however' },
+                  { korean: '공부는', english: 'studying (topic)' },
+                  { korean: '같이', english: 'together' },
+                  { korean: '하자', english: 'let\'s do' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '태호',
+                speakerEnglish: 'Taeho',
+                korean: '정말? 고마워, 민수야.',
+                romanization: 'jeongmal? gomawo, minsuya.',
+                english: 'Really? Thank you, Minsu.',
+                words: [
+                  { korean: '정말', english: 'really' },
+                  { korean: '고마워', english: 'thank you (casual)' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+        ],
+      },
+      // ─────────────────────────────────────────────
+      // Chapter 4: Friends Again (Level 3)
+      // ─────────────────────────────────────────────
+      {
+        id: 'det-ch4-friends-again',
+        title: 'Friends Again',
+        titleKorean: '다시 친구',
+        level: 3,
+        description: 'Minsu helps Taeho study for the exam. The mystery is solved, and a friendship is restored.',
+        panels: [
+          {
+            id: 'det-ch4-p1',
+            imagePrompt: 'manga style illustration of three Korean students studying together at a bright library table during daytime, books and notebooks spread out, warm natural sunlight, contrast to previous dark scenes, hopeful atmosphere',
+            narration: '다음 날, 세 사람은 함께 공부합니다.',
+            narrationEnglish: 'The next day, the three study together.',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '이 부분은 이렇게 풀어야 해.',
+                romanization: 'i bubuneun ireoke pureoya hae.',
+                english: 'You need to solve this part like this.',
+                words: [
+                  { korean: '이 부분은', english: 'this part (topic)' },
+                  { korean: '이렇게', english: 'like this' },
+                  { korean: '풀어야 해', english: 'need to solve' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '태호',
+                speakerEnglish: 'Taeho',
+                korean: '아, 이제 이해됐어!',
+                romanization: 'a, ije ihaedwaesseo!',
+                english: 'Ah, now I understand!',
+                words: [
+                  { korean: '이제', english: 'now' },
+                  { korean: '이해됐어', english: 'I understood' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'det-ch4-p2',
+            imagePrompt: 'manga style illustration of a Korean girl tutoring a boy at a table with flashcards, bright cheerful library setting, encouraging expression, warm lighting, study session atmosphere',
+            dialogue: [
+              {
+                speaker: '지영',
+                speakerEnglish: 'Jiyoung',
+                korean: '태호야, 이 단어 뜻 알아?',
+                romanization: 'taehoya, i daneo tteut ara?',
+                english: 'Taeho, do you know the meaning of this word?',
+                words: [
+                  { korean: '이', english: 'this' },
+                  { korean: '단어', english: 'word' },
+                  { korean: '뜻', english: 'meaning' },
+                  { korean: '알아', english: 'do you know' },
+                ],
+                position: 'right',
+              },
+              {
+                speaker: '태호',
+                speakerEnglish: 'Taeho',
+                korean: '음... 잠깐, 알 것 같아!',
+                romanization: 'eum... jamkkan, al geot gata!',
+                english: 'Hmm... Wait, I think I know it!',
+                words: [
+                  { korean: '잠깐', english: 'wait / a moment' },
+                  { korean: '알', english: 'know' },
+                  { korean: '것 같아', english: 'I think' },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'det-ch4-p3',
+            imagePrompt: 'manga style illustration of a Korean classroom during an exam, students sitting at desks writing, one boy looking confident and focused, bright well-lit classroom, calm determined atmosphere',
+            narration: '시험 날이 됐습니다.',
+            narrationEnglish: 'Exam day has arrived.',
+            dialogue: [
+              {
+                speaker: '태호',
+                speakerEnglish: 'Taeho (thinking)',
+                korean: '할 수 있어. 열심히 공부했으니까.',
+                romanization: 'hal su isseo. yeolsimhi gongbuhaesseunikka.',
+                english: 'I can do this. Because I studied hard.',
+                words: [
+                  { korean: '할 수 있어', english: 'I can do it' },
+                  { korean: '열심히', english: 'hard / diligently' },
+                  { korean: '공부했으니까', english: 'because I studied' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'det-ch4-p4',
+            imagePrompt: 'manga style illustration of a Korean boy looking at an exam result paper with a surprised happy expression, school hallway, warm lighting, other students in background, relief and joy visible',
+            dialogue: [
+              {
+                speaker: '태호',
+                speakerEnglish: 'Taeho',
+                korean: '80점! 혼자 힘으로 했어!',
+                romanization: '80jeom! honja himeuro haesseo!',
+                english: '80 points! I did it on my own!',
+                words: [
+                  { korean: '80점', english: '80 points' },
+                  { korean: '혼자', english: 'alone / on my own' },
+                  { korean: '힘으로', english: 'by one\'s own power' },
+                  { korean: '했어', english: 'did it' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'det-ch4-p5',
+            imagePrompt: 'manga style illustration of three Korean students high-fiving in a school hallway, celebrating, big smiles, warm golden sunlight through windows, happy triumphant atmosphere, cherry blossom petals visible outside',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '잘했어, 태호야! 네 실력이야.',
+                romanization: 'jalhaesseo, taehoya! ne sillyeogiya.',
+                english: 'Great job, Taeho! That\'s your own ability.',
+                words: [
+                  { korean: '잘했어', english: 'well done' },
+                  { korean: '네', english: 'your' },
+                  { korean: '실력이야', english: 'is your ability' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '지영',
+                speakerEnglish: 'Jiyoung',
+                korean: '우리 축하하러 떡볶이 먹으러 가자!',
+                romanization: 'uri chukaharo tteokbokki meogeuro gaja!',
+                english: 'Let\'s go eat tteokbokki to celebrate!',
+                words: [
+                  { korean: '축하하러', english: 'to celebrate' },
+                  { korean: '떡볶이', english: 'tteokbokki (rice cakes)' },
+                  { korean: '먹으러', english: 'to eat' },
+                  { korean: '가자', english: 'let\'s go' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'det-ch4-p6',
+            imagePrompt: 'manga style illustration of three Korean students eating tteokbokki at a cozy Korean street food stall, steam rising from the food, warm orange overhead lights, laughing together, heartwarming friendship scene',
+            narration: '세 사람은 함께 떡볶이를 먹으며 웃습니다.',
+            narrationEnglish: 'The three eat tteokbokki together and laugh.',
+            dialogue: [
+              {
+                speaker: '태호',
+                speakerEnglish: 'Taeho',
+                korean: '정말 고마워. 너희 덕분이야.',
+                romanization: 'jeongmal gomawo. neohui deokbuniya.',
+                english: 'Really thank you. It\'s thanks to you guys.',
+                words: [
+                  { korean: '정말', english: 'really' },
+                  { korean: '고마워', english: 'thank you' },
+                  { korean: '너희', english: 'you guys' },
+                  { korean: '덕분이야', english: 'it\'s thanks to' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'det-ch4-p7',
+            imagePrompt: 'manga style illustration of a Korean boy detective smiling confidently in the sunset light at school, warm golden hour lighting, gentle breeze, school building in background, reflective peaceful atmosphere',
+            dialogue: [
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '사건은 해결됐어. 그리고 친구도 생겼어.',
+                romanization: 'sageuneun haegyeoldwaesseo. geurigo chingudo saenggyeosseo.',
+                english: 'The case is solved. And I made a friend too.',
+                words: [
+                  { korean: '사건은', english: 'the case (topic)' },
+                  { korean: '해결됐어', english: 'is solved' },
+                  { korean: '그리고', english: 'and' },
+                  { korean: '친구도', english: 'friend too' },
+                  { korean: '생겼어', english: 'was made / gained' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'det-ch4-p8',
+            imagePrompt: 'manga style illustration of three Korean students walking home together along a tree-lined path at sunset, long shadows, warm golden light, school bags on their backs, peaceful ending scene, beautiful sky gradient',
+            narration: '사건은 끝났지만, 우정은 시작됐습니다.',
+            narrationEnglish: 'The case is over, but the friendship has just begun.',
+            dialogue: [
+              {
+                speaker: '지영',
+                speakerEnglish: 'Jiyoung',
+                korean: '다음에도 사건이 생기면 같이 풀자!',
+                romanization: 'daeumedo sageni saenggimyeon gachi pulja!',
+                english: 'Next time there\'s a case, let\'s solve it together!',
+                words: [
+                  { korean: '다음에도', english: 'next time too' },
+                  { korean: '사건이', english: 'case (subject)' },
+                  { korean: '생기면', english: 'if it happens' },
+                  { korean: '같이', english: 'together' },
+                  { korean: '풀자', english: 'let\'s solve' },
+                ],
+                position: 'right',
+              },
+              {
+                speaker: '민수',
+                speakerEnglish: 'Minsu',
+                korean: '그래! 탐정단 결성이다!',
+                romanization: 'geurae! tamjeongdan gyeolseongida!',
+                english: 'Yes! The detective team is formed!',
+                words: [
+                  { korean: '그래', english: 'yes / okay' },
+                  { korean: '탐정단', english: 'detective team' },
+                  { korean: '결성이다', english: 'is formed' },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   // ═══════════════════════════════════════════════
@@ -3062,6 +3521,413 @@ export const mangaSeries: MangaSeries[] = [
                   { korean: '잘할', english: 'do well' },
                   { korean: '수', english: 'ability' },
                   { korean: '있을까', english: 'will there be' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+        ],
+      },
+      // ─────────────────────────────────────────────
+      // Chapter 3: The Evaluation (Level 3)
+      // ─────────────────────────────────────────────
+      {
+        id: 'kpop-ch3-evaluation',
+        title: 'The Evaluation',
+        titleKorean: '평가의 날',
+        level: 3,
+        description: 'Evaluation day arrives. Seoyeon must prove herself or risk being cut from the program.',
+        panels: [
+          {
+            id: 'kpop-ch3-p1',
+            imagePrompt: 'colorful energetic manga style illustration of Korean trainees lined up nervously in a large bright dance practice room, facing strict judges at a table, evaluation day banner visible, tense atmosphere, bright studio lighting',
+            narration: '평가의 날이 왔습니다.',
+            narrationEnglish: 'Evaluation day has arrived.',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon (thinking)',
+                korean: '심장이 너무 빨리 뛰어.',
+                romanization: 'simjangi neomu ppalli ttwiyeo.',
+                english: 'My heart is beating so fast.',
+                words: [
+                  { korean: '심장이', english: 'heart (subject)' },
+                  { korean: '너무', english: 'so / too much' },
+                  { korean: '빨리', english: 'fast' },
+                  { korean: '뛰어', english: 'is beating' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch3-p2',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl with ponytail giving an encouraging fist bump to another girl with pixie-cut hair in a dance studio hallway, supportive friendship moment, warm but nervous energy, bright lighting',
+            dialogue: [
+              {
+                speaker: '하은',
+                speakerEnglish: 'Haeun',
+                korean: '서연아, 우리 할 수 있어. 같이 연습했잖아.',
+                romanization: 'seoyeona, uri hal su isseo. gachi yeonseuphaetjanha.',
+                english: 'Seoyeon, we can do this. We practiced together, remember.',
+                words: [
+                  { korean: '우리', english: 'we' },
+                  { korean: '할 수 있어', english: 'can do it' },
+                  { korean: '같이', english: 'together' },
+                  { korean: '연습했잖아', english: 'we practiced, right' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '맞아. 최선을 다하자!',
+                romanization: 'maja. choesoneul dahaja!',
+                english: 'Right. Let\'s do our best!',
+                words: [
+                  { korean: '맞아', english: 'right / correct' },
+                  { korean: '최선을', english: 'one\'s best (object)' },
+                  { korean: '다하자', english: 'let\'s do it all' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch3-p3',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl performing a powerful dance solo under a spotlight in a practice room, dynamic movement captured mid-spin, motion lines and sparkle effects, judges watching intently, vibrant neon energy',
+            narration: '서연의 차례입니다.',
+            narrationEnglish: 'It\'s Seoyeon\'s turn.',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon (thinking)',
+                korean: '지금이야. 모든 걸 보여주자.',
+                romanization: 'jigeumiya. modeun geol boyeojuja.',
+                english: 'This is it. Let me show them everything.',
+                words: [
+                  { korean: '지금이야', english: 'it\'s now' },
+                  { korean: '모든 걸', english: 'everything (object)' },
+                  { korean: '보여주자', english: 'let me show' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch3-p4',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl finishing a dance routine in a powerful ending pose, one arm raised, sweat glistening, breathing hard but proud expression, spotlight from above, audience of trainees clapping',
+            dialogue: [
+              {
+                speaker: '코치',
+                speakerEnglish: 'Coach',
+                korean: '서연 씨, 한 달 전과 완전히 달라졌어요.',
+                romanization: 'seoyeon ssi, han dal jeongwa wanjeonhi dallajyeosseoyo.',
+                english: 'Seoyeon, you\'re completely different from a month ago.',
+                words: [
+                  { korean: '한 달 전과', english: 'from a month ago' },
+                  { korean: '완전히', english: 'completely' },
+                  { korean: '달라졌어요', english: 'has changed (polite)' },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch3-p5',
+            imagePrompt: 'colorful energetic manga style illustration of a judge whispering to another judge with subtle smiles, clipboard with notes, evaluation room, other trainees waiting nervously in background, anticipation in the air',
+            dialogue: [
+              {
+                speaker: '심사위원',
+                speakerEnglish: 'Judge',
+                korean: '결과를 발표하겠습니다.',
+                romanization: 'gyeolguareul balpyohagesseumnida.',
+                english: 'We will announce the results.',
+                words: [
+                  { korean: '결과를', english: 'results (object)' },
+                  { korean: '발표하겠습니다', english: 'will announce (formal)' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch3-p6',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl with pixie-cut hair looking devastated, tears forming, sitting on the practice room floor, other trainees around her, emotional gut-punch moment, dramatic lighting',
+            dialogue: [
+              {
+                speaker: '심사위원',
+                speakerEnglish: 'Judge',
+                korean: '하은 씨는... 이번에 탈락입니다.',
+                romanization: 'haeun ssineun... ibeone tallagyimnida.',
+                english: 'Haeun... you are eliminated this time.',
+                words: [
+                  { korean: '이번에', english: 'this time' },
+                  { korean: '탈락입니다', english: 'is eliminated (formal)' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '하은아...!',
+                romanization: 'haeuna...!',
+                english: 'Haeun...!',
+                words: [
+                  { korean: '하은아', english: 'Haeun (calling name)' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch3-p7',
+            imagePrompt: 'colorful energetic manga style illustration of two Korean girls hugging in a dance studio, one crying on the other shoulder, emotional farewell, warm golden light from window, bittersweet atmosphere, other trainees watching with sad expressions',
+            dialogue: [
+              {
+                speaker: '하은',
+                speakerEnglish: 'Haeun',
+                korean: '괜찮아. 서연아, 너는 꼭 데뷔해.',
+                romanization: 'gwaenchana. seoyeona, neoneun kkok debyuhae.',
+                english: 'It\'s okay. Seoyeon, you must debut.',
+                words: [
+                  { korean: '괜찮아', english: 'it\'s okay' },
+                  { korean: '꼭', english: 'definitely / must' },
+                  { korean: '데뷔해', english: 'debut' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '약속할게. 하은이 몫까지.',
+                romanization: 'yaksokhalge. haeuni mokkaji.',
+                english: 'I promise. For your share too.',
+                words: [
+                  { korean: '약속할게', english: 'I\'ll promise' },
+                  { korean: '몫까지', english: 'even your share / portion' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch3-p8',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl with ponytail standing alone in a practice room at dusk, looking at her reflection in the mirror with fierce determination, sunset light through window, silhouette composition, powerful emotional moment',
+            narration: '서연은 더 강해지기로 결심합니다.',
+            narrationEnglish: 'Seoyeon decides to become stronger.',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '포기 안 해. 하은이를 위해서도.',
+                romanization: 'pogi an hae. haeuneureul wihaesedo.',
+                english: 'I won\'t give up. For Haeun\'s sake too.',
+                words: [
+                  { korean: '포기', english: 'giving up' },
+                  { korean: '안 해', english: 'won\'t do' },
+                  { korean: '위해서도', english: 'for the sake of, too' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+        ],
+      },
+      // ─────────────────────────────────────────────
+      // Chapter 4: Debut Stage (Level 4)
+      // ─────────────────────────────────────────────
+      {
+        id: 'kpop-ch4-debut',
+        title: 'Debut Stage',
+        titleKorean: '데뷔 무대',
+        level: 4,
+        description: 'After months of training, Seoyeon finally takes the debut stage. Haeun watches from the audience.',
+        panels: [
+          {
+            id: 'kpop-ch4-p1',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean entertainment company lobby with a large digital screen showing debut group announcement, a girl trainee staring at the screen in shock and joy, sparkle effects, modern sleek interior',
+            narration: '3개월 후, 데뷔 그룹이 발표됩니다.',
+            narrationEnglish: 'Three months later, the debut group is announced.',
+            dialogue: [
+              {
+                speaker: '코치',
+                speakerEnglish: 'Coach',
+                korean: '서연 씨, 축하합니다. 데뷔 멤버로 선발됐어요.',
+                romanization: 'seoyeon ssi, chukahamnida. debyu membeoro seonbaldwaesseoyo.',
+                english: 'Seoyeon, congratulations. You\'ve been selected as a debut member.',
+                words: [
+                  { korean: '축하합니다', english: 'congratulations (formal)' },
+                  { korean: '데뷔', english: 'debut' },
+                  { korean: '멤버로', english: 'as a member' },
+                  { korean: '선발됐어요', english: 'was selected (polite)' },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch4-p2',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl video calling her friend on a phone, tears of happiness, friend on screen also emotional, warm bedroom setting with idol posters on wall, heartfelt moment',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '하은아, 나 데뷔해! 꼭 보러 와!',
+                romanization: 'haeuna, na debyuhae! kkok boreo wa!',
+                english: 'Haeun, I\'m debuting! You must come watch!',
+                words: [
+                  { korean: '나', english: 'I' },
+                  { korean: '데뷔해', english: 'am debuting' },
+                  { korean: '꼭', english: 'definitely' },
+                  { korean: '보러 와', english: 'come to watch' },
+                ],
+                position: 'right',
+              },
+              {
+                speaker: '하은',
+                speakerEnglish: 'Haeun (on phone)',
+                korean: '당연하지! 맨 앞에서 볼 거야!',
+                romanization: 'dangyeonhaji! maen apeseo bol geoya!',
+                english: 'Of course! I\'ll watch from the very front!',
+                words: [
+                  { korean: '당연하지', english: 'of course' },
+                  { korean: '맨 앞에서', english: 'from the very front' },
+                  { korean: '볼 거야', english: 'will watch' },
+                ],
+                position: 'left',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch4-p3',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl getting her stage makeup done backstage, stylists around her, bright vanity mirror lights, glittery outfit on a rack nearby, nervous excitement, pre-show energy',
+            narration: '데뷔 무대 당일, 백스테이지.',
+            narrationEnglish: 'Debut stage day, backstage.',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon (thinking)',
+                korean: '여기까지 오는 데 정말 오래 걸렸어.',
+                romanization: 'yeogikkaji oneun de jeongmal orae geollyeosseo.',
+                english: 'It took so long to get here.',
+                words: [
+                  { korean: '여기까지', english: 'up to here' },
+                  { korean: '오는 데', english: 'to come / to get' },
+                  { korean: '정말', english: 'really' },
+                  { korean: '오래', english: 'long time' },
+                  { korean: '걸렸어', english: 'it took' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch4-p4',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl in sparkling stage outfit peeking through a curtain at a huge concert audience with lightsticks, view from backstage, massive crowd with colorful lights, breathtaking scale, nervous awe',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '와... 사람이 이렇게 많아...',
+                romanization: 'wa... sarami ireoke mana...',
+                english: 'Wow... there are so many people...',
+                words: [
+                  { korean: '와', english: 'wow' },
+                  { korean: '사람이', english: 'people (subject)' },
+                  { korean: '이렇게', english: 'this much / like this' },
+                  { korean: '많아', english: 'many / a lot' },
+                ],
+                position: 'right',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch4-p5',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl with pixie-cut hair in the audience holding a lightstick and a handmade banner cheering, bright concert atmosphere, colorful audience, emotional support moment, tears and smile',
+            dialogue: [
+              {
+                speaker: '하은',
+                speakerEnglish: 'Haeun (from audience)',
+                korean: '서연아 화이팅!!!',
+                romanization: 'seoyeona hwaiting!!!',
+                english: 'Seoyeon, fighting!!!',
+                words: [
+                  { korean: '화이팅', english: 'fighting! (cheer of encouragement)' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch4-p6',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean girl idol performing center stage under brilliant spotlights, dynamic dance pose, glittering outfit, concert lighting with lasers and effects, crowd of lightsticks in background, peak performance energy, vibrant neon colors',
+            narration: '서연은 무대 위에서 빛납니다.',
+            narrationEnglish: 'Seoyeon shines on stage.',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon (thinking)',
+                korean: '이 순간을 절대 잊지 않을 거야.',
+                romanization: 'i sunganeul jeoldae itji anheul geoya.',
+                english: 'I will never forget this moment.',
+                words: [
+                  { korean: '이 순간을', english: 'this moment (object)' },
+                  { korean: '절대', english: 'absolutely / never' },
+                  { korean: '잊지 않을', english: 'will not forget' },
+                  { korean: '거야', english: 'going to' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch4-p7',
+            imagePrompt: 'colorful energetic manga style illustration of a Korean idol girl bowing deeply to a cheering audience after a performance, flowers thrown on stage, lightsticks waving, tears of joy, triumphant emotional moment, beautiful stage lighting',
+            dialogue: [
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '감사합니다! 사랑해요!',
+                romanization: 'gamsahamnida! saranghaeyo!',
+                english: 'Thank you! I love you!',
+                words: [
+                  { korean: '감사합니다', english: 'thank you (formal)' },
+                  { korean: '사랑해요', english: 'I love you (polite)' },
+                ],
+                position: 'center',
+              },
+            ],
+          },
+          {
+            id: 'kpop-ch4-p8',
+            imagePrompt: 'colorful energetic manga style illustration of two Korean girls reuniting backstage after a concert, one in stage outfit and one in casual clothes, tight emotional hug, flowers and congratulation gifts around, warm happy tears, beautiful friendship ending',
+            narration: '꿈은 이루어집니다. 함께라면.',
+            narrationEnglish: 'Dreams come true. When you\'re together.',
+            dialogue: [
+              {
+                speaker: '하은',
+                speakerEnglish: 'Haeun',
+                korean: '너 정말 멋있었어. 자랑스러워.',
+                romanization: 'neo jeongmal meosisseosseo. jarangseurowo.',
+                english: 'You were really amazing. I\'m proud of you.',
+                words: [
+                  { korean: '정말', english: 'really' },
+                  { korean: '멋있었어', english: 'was amazing / cool' },
+                  { korean: '자랑스러워', english: 'I\'m proud' },
+                ],
+                position: 'left',
+              },
+              {
+                speaker: '서연',
+                speakerEnglish: 'Seoyeon',
+                korean: '하은이가 없었으면 여기까지 못 왔어.',
+                romanization: 'haeuneuga eopseosseumyeon yeogikkaji mot wasseo.',
+                english: 'I couldn\'t have made it here without you.',
+                words: [
+                  { korean: '없었으면', english: 'if not for / without' },
+                  { korean: '여기까지', english: 'up to here' },
+                  { korean: '못 왔어', english: 'couldn\'t have come' },
                 ],
                 position: 'right',
               },

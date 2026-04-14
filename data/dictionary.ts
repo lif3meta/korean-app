@@ -658,12 +658,31 @@ export const dictionaryEntries: DictionaryEntry[] = [
   { korean: '갈수록', romanization: 'galsurok', english: 'As time goes by / Increasingly', partOfSpeech: 'adverb' },
 ].sort((a, b) => a.romanization.localeCompare(b.romanization));
 
+// Merge vocabulary words into dictionary (deduplicated)
+import { vocabulary } from './vocabulary';
+
+const _vocabKoreanSet = new Set(dictionaryEntries.map(e => e.korean));
+const _vocabDictEntries: DictionaryEntry[] = vocabulary
+  .filter(w => !_vocabKoreanSet.has(w.korean))
+  .map(w => ({
+    korean: w.korean,
+    romanization: w.romanization,
+    english: w.english,
+    partOfSpeech: w.partOfSpeech as DictionaryEntry['partOfSpeech'],
+    example: w.example ? { korean: w.example.korean, english: w.example.english } : undefined,
+  }));
+
+export const allDictionaryEntries: DictionaryEntry[] = [
+  ...dictionaryEntries,
+  ..._vocabDictEntries,
+].sort((a, b) => a.romanization.localeCompare(b.romanization));
+
 export function searchDictionary(query: string): DictionaryEntry[] {
   const q = query.toLowerCase().trim();
   if (!q) return [];
-  return dictionaryEntries.filter(e =>
+  return allDictionaryEntries.filter(e =>
     e.korean.includes(q) ||
     e.english.toLowerCase().includes(q) ||
     e.romanization.toLowerCase().includes(q)
-  ).slice(0, 30);
+  ).slice(0, 50);
 }

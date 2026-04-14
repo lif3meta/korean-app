@@ -2,14 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
 import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme';
 import { pronunciationLessons } from '@/data/pronunciation';
 import { useAppStore } from '@/lib/store';
-import { speakKorean } from '@/lib/audio';
 
 export default function PronunciationListScreen() {
-  const { completedLessons, hapticEnabled, markLessonComplete } = useAppStore();
+  const { completedLessons } = useAppStore();
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
@@ -20,40 +18,28 @@ export default function PronunciationListScreen() {
         </View>
       </View>
 
-        <View style={styles.listContainer}>
-          {pronunciationLessons.map((l) => {
-            const isCompleted = completedLessons[l.id];
-            const example = l.sections[0]?.examples?.[0];
-            return (
-              <TouchableOpacity key={l.id} onPress={() => router.push(`/lesson/pronunciation/${l.id}`)} activeOpacity={0.7} style={styles.card}>
-                <View style={[styles.numberCircle, isCompleted && styles.completedCircle]}>
-                  {isCompleted ? (
-                    <Ionicons name="checkmark" size={18} color="#fff" />
-                  ) : (
-                    <Text style={styles.numberText}>{l.order}</Text>
-                  )}
-                </View>
-                <View style={styles.cardContent}>
-                  <Text style={styles.lessonTitle} numberOfLines={2}>{l.title}</Text>
-                  <Text style={styles.lessonKorean}>{l.titleKorean}</Text>
-                  <Text style={styles.lessonDesc} numberOfLines={2}>{l.description}</Text>
-                </View>
-                <TouchableOpacity
-                  onPress={(e) => {
-                    e.stopPropagation();
-                    if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    if (example) speakKorean(example.korean);
-                    markLessonComplete(l.id, 100);
-                  }}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                  style={styles.playBtn}
-                >
-                  <Ionicons name={isCompleted ? 'checkmark-circle' : 'play-circle'} size={32} color={isCompleted ? colors.success : colors.accent} />
-                </TouchableOpacity>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+      <View style={styles.listContainer}>
+        {pronunciationLessons.map((l) => {
+          const isCompleted = completedLessons[l.id];
+          return (
+            <TouchableOpacity key={l.id} onPress={() => router.push(`/lesson/pronunciation/${l.id}`)} activeOpacity={0.7} style={styles.card}>
+              <View style={[styles.numberCircle, isCompleted && styles.completedCircle]}>
+                {isCompleted ? (
+                  <Ionicons name="checkmark" size={18} color="#fff" />
+                ) : (
+                  <Text style={styles.numberText}>{l.order}</Text>
+                )}
+              </View>
+              <View style={styles.cardContent}>
+                <Text style={styles.lessonTitle} numberOfLines={2}>{l.title}</Text>
+                <Text style={styles.lessonKorean}>{l.titleKorean}</Text>
+                <Text style={styles.lessonDesc} numberOfLines={2}>{l.description}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={22} color={colors.textTertiary} />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </ScrollView>
   );
 }
@@ -82,5 +68,4 @@ const styles = StyleSheet.create({
   lessonTitle: { ...typography.bodyBold, color: colors.textPrimary },
   lessonKorean: { ...typography.caption, color: colors.textTertiary },
   lessonDesc: { ...typography.footnote, color: colors.textSecondary, marginTop: 2 },
-  playBtn: { padding: 4 },
 });

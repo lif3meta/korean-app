@@ -8,7 +8,7 @@ import { allHangul, getHangulById } from '@/data/hangul';
 import { useAppStore } from '@/lib/store';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { speakKorean } from '@/lib/audio';
+import { speakHangulCharacter } from '@/lib/audio';
 import { AudioButton } from '@/components/common/AudioButton';
 
 export default function CharacterDetailScreen() {
@@ -27,9 +27,9 @@ export default function CharacterDetailScreen() {
   const handlePlay = useCallback(() => {
     if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     setIsPlaying(true);
-    speakKorean(char.sound);
+    speakHangulCharacter(char);
     setTimeout(() => setIsPlaying(false), 1200);
-  }, [char.sound]);
+  }, [char, hapticEnabled]);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 32 }}>

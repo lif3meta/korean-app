@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme';
 import { grammarLessons } from '@/data/grammar';
 import { useAppStore } from '@/lib/store';
-import { speakKorean } from '@/lib/audio';
+import { playAudioCueAsync } from '@/lib/audio';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH - 48;
@@ -19,7 +19,7 @@ export default function GrammarListScreen() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [cardIndex, setCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const { completedLessons, hapticEnabled, markLessonComplete } = useAppStore();
+  const { completedLessons, hapticEnabled } = useAppStore();
 
   const lesson = grammarLessons[cardIndex];
   const firstSection = lesson?.sections[0];
@@ -68,18 +68,7 @@ export default function GrammarListScreen() {
                   <Text style={styles.lessonKorean}>{l.titleKorean}</Text>
                   <Text style={styles.lessonDesc} numberOfLines={2}>{l.description}</Text>
                 </View>
-                <TouchableOpacity
-                  onPress={(e) => {
-                    e.stopPropagation();
-                    if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    if (example) speakKorean(example.korean);
-                    markLessonComplete(l.id, 100);
-                  }}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                  style={styles.playBtn}
-                >
-                  <Ionicons name={isCompleted ? 'checkmark-circle' : 'play-circle'} size={32} color={isCompleted ? colors.success : colors.accent} />
-                </TouchableOpacity>
+                <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />
               </TouchableOpacity>
             );
           })}
@@ -113,7 +102,7 @@ export default function GrammarListScreen() {
                       <TouchableOpacity
                         onPress={() => {
                           if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                          speakKorean(firstExample.korean);
+                          playAudioCueAsync({ kind: 'korean_text', text: firstExample.korean });
                         }}
                         style={styles.speakRow}
                       >
@@ -193,7 +182,6 @@ const styles = StyleSheet.create({
   lessonTitle: { ...typography.bodyBold, color: colors.textPrimary },
   lessonKorean: { ...typography.caption, color: colors.textTertiary },
   lessonDesc: { ...typography.footnote, color: colors.textSecondary, marginTop: 2 },
-  playBtn: { padding: 4 },
 
   // Cards view
   cardsContainer: { alignItems: 'center', paddingHorizontal: spacing.lg, gap: spacing.md },

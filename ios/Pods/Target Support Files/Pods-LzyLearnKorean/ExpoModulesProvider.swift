@@ -24,44 +24,10 @@ internal import ExpoSplashScreen
 internal import ExpoStoreReview
 internal import ExpoSymbols
 internal import ExpoSystemUI
-#if EXPO_CONFIGURATION_DEBUG
-internal import EXDevLauncher
-internal import EXDevMenu
-#endif
 
 @objc(ExpoModulesProvider)
 internal class ExpoModulesProvider: ModulesProvider {
   public override func getModuleClasses() -> [ExpoModuleTupleType] {
-    #if EXPO_CONFIGURATION_DEBUG
-    return [
-      (module: DomWebViewModule.self, name: nil),
-      (module: ExpoFetchModule.self, name: nil),
-      (module: AssetModule.self, name: nil),
-      (module: AudioModule.self, name: nil),
-      (module: ConstantsModule.self, name: nil),
-      (module: FileSystemModule.self, name: nil),
-      (module: FileSystemLegacyModule.self, name: nil),
-      (module: FontLoaderModule.self, name: nil),
-      (module: FontUtilsModule.self, name: nil),
-      (module: GlassEffectModule.self, name: nil),
-      (module: HapticsModule.self, name: nil),
-      (module: ImageModule.self, name: nil),
-      (module: KeepAwakeModule.self, name: nil),
-      (module: LinearGradientModule.self, name: nil),
-      (module: ExpoLinkingModule.self, name: nil),
-      (module: ExpoHeadModule.self, name: nil),
-      (module: LinkPreviewNativeModule.self, name: nil),
-      (module: RouterToolbarModule.self, name: nil),
-      (module: SplashScreenModule.self, name: nil),
-      (module: StoreReviewModule.self, name: nil),
-      (module: SymbolModule.self, name: nil),
-      (module: ExpoSystemUIModule.self, name: nil),
-      (module: DevLauncherModule.self, name: nil),
-      (module: DevMenuModule.self, name: nil),
-      (module: DevMenuInternalModule.self, name: nil),
-      (module: DevMenuPreferences.self, name: nil)
-    ]
-    #else
     return [
       (module: DomWebViewModule.self, name: nil),
       (module: ExpoFetchModule.self, name: nil),
@@ -86,38 +52,20 @@ internal class ExpoModulesProvider: ModulesProvider {
       (module: SymbolModule.self, name: nil),
       (module: ExpoSystemUIModule.self, name: nil)
     ]
-    #endif
   }
 
   public override func getAppDelegateSubscribers() -> [ExpoAppDelegateSubscriber.Type] {
-    #if EXPO_CONFIGURATION_DEBUG
-    return [
-      FileSystemBackgroundSessionHandler.self,
-      LinkingAppDelegateSubscriber.self,
-      ExpoHeadAppDelegateSubscriber.self,
-      SplashScreenAppDelegateSubscriber.self,
-      ExpoDevLauncherAppDelegateSubscriber.self
-    ]
-    #else
     return [
       FileSystemBackgroundSessionHandler.self,
       LinkingAppDelegateSubscriber.self,
       ExpoHeadAppDelegateSubscriber.self,
       SplashScreenAppDelegateSubscriber.self
     ]
-    #endif
   }
 
   public override func getReactDelegateHandlers() -> [ExpoReactDelegateHandlerTupleType] {
-    #if EXPO_CONFIGURATION_DEBUG
-    return [
-      (packageName: "expo-dev-launcher", handler: ExpoDevLauncherReactDelegateHandler.self),
-      (packageName: "expo-dev-menu", handler: ExpoDevMenuReactDelegateHandler.self)
-    ]
-    #else
     return [
     ]
-    #endif
   }
 
   public override func getAppCodeSignEntitlements() -> AppCodeSignEntitlements {

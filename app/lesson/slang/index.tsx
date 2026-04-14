@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme';
 import { slangWords, slangCategories } from '@/data/slang';
 import type { SlangWord } from '@/data/slang';
 import { AudioButton } from '@/components/common/AudioButton';
+import { useAppStore } from '@/lib/store';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -29,6 +30,12 @@ const categoryColors: Record<string, string> = {
 export default function SlangListScreen() {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const markLessonComplete = useAppStore((s) => s.markLessonComplete);
+
+  // Mark slang as complete once the user has opened the screen
+  useEffect(() => {
+    markLessonComplete('slang', 100);
+  }, [markLessonComplete]);
 
   const filtered = activeCategory === 'all'
     ? slangWords

@@ -31,15 +31,9 @@
 				<string>com.hanflow.korean</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>exp+korean-app</string>
-			</array>
-		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>23</string>
+	<string>24</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSMinimumSystemVersion</key>
@@ -53,12 +47,6 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_expo._tcp</string>
-	</array>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Lzy Learn Korean uses the local network to connect to nearby devices.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Lzy Learn Korean needs microphone access so you can practice speaking Korean and get pronunciation feedback.</string>
 	<key>NSUserActivityTypes</key>

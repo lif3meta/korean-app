@@ -83,7 +83,7 @@ export default function ReadingListScreen() {
                   <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.cardGradient}>
                     <View style={styles.cardHeader}>
                       <View style={styles.cardTitleArea}>
-                        <Text style={styles.cardTitle} numberOfLines={1}>{p.title}</Text>
+                        <Text style={styles.cardTitle} numberOfLines={2}>{p.title}</Text>
                         <Text style={styles.cardTitleKorean}>{p.titleKorean}</Text>
                       </View>
                       <View style={[styles.levelBadge, { backgroundColor: levelStyle.bg }]}>

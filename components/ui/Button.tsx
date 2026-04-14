@@ -6,7 +6,7 @@ import { colors, borderRadius, spacing, typography } from '@/lib/theme';
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   loading?: boolean;
@@ -19,10 +19,13 @@ export function Button({ title, onPress, variant = 'primary', size = 'md', disab
   const sizeStyles = sizes[size];
   const isDisabled = disabled || loading;
 
-  if (variant === 'primary') {
+  if (variant === 'primary' || variant === 'success') {
+    const gradientColors: [string, string] = variant === 'success'
+      ? [colors.secondary, '#2d5248']
+      : [colors.primary, colors.primaryDark];
     return (
       <TouchableOpacity onPress={onPress} disabled={isDisabled} activeOpacity={0.8} style={[{ opacity: isDisabled ? 0.5 : 1 }, style]}>
-        <LinearGradient colors={[colors.primary, colors.primaryDark]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.base, sizeStyles.container, { borderRadius: borderRadius.xl }]}>
+        <LinearGradient colors={gradientColors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.base, sizeStyles.container, { borderRadius: borderRadius.xl }]}>
           {loading ? <ActivityIndicator color="#fff" /> : (
             <>
               {icon}
@@ -71,4 +74,5 @@ const variantStyles = {
   outline: { container: { backgroundColor: 'transparent', borderWidth: 2, borderColor: colors.primary } as ViewStyle, textColor: colors.primary },
   ghost: { container: { backgroundColor: 'transparent' } as ViewStyle, textColor: colors.primary },
   danger: { container: { backgroundColor: colors.dangerLight } as ViewStyle, textColor: colors.danger },
+  success: { container: { backgroundColor: colors.secondaryLight } as ViewStyle, textColor: colors.secondary },
 };

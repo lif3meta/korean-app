@@ -16,8 +16,9 @@ import { StatusBar } from 'expo-status-bar';
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { vocabulary, VocabWord } from '@/data/vocabulary';
 import { sentences, Sentence } from '@/data/sentences';
+import { hasCachedAudio, getCachedEnglishAudioId } from '@/lib/audioCache';
 import { colors, spacing, borderRadius } from '@/lib/theme';
-import { speakKoreanAsync, speakEnglishAsync, stopSpeaking, waitForSpeechEnd } from '@/lib/audio';
+import { speakKoreanDirectAsync, speakEnglishDirectAsync, stopSpeaking } from '@/lib/audio';
 
 // ── Sleep-specific sentence pairs ──────────────────────────────────
 const sleepSentences: { korean: string; english: string; romanization: string }[] = [
@@ -111,12 +112,13 @@ function buildItemPool(contentType: ContentType): SleepItem[] {
     pool = pool.concat(sleepSentences);
   }
 
-  // Deduplicate by korean text
+  // Deduplicate by korean text and filter to items with cached audio
   const seen = new Set<string>();
   pool = pool.filter((item) => {
     if (seen.has(item.korean)) return false;
     seen.add(item.korean);
-    return true;
+    // Only include items that have both Korean and English cached audio
+    return hasCachedAudio(item.korean) && getCachedEnglishAudioId(item.english) !== null;
   });
 
   return shuffleArray(pool);
@@ -243,11 +245,10 @@ export default function SleepScreen() {
       if (isCancelledRef.current) return;
       try {
         if (language === 'ko-KR') {
-          await speakKoreanAsync(text);
+          await speakKoreanDirectAsync(text, _rate);
         } else {
-          await speakEnglishAsync(text);
+          await speakEnglishDirectAsync(text);
         }
-        await waitForSpeechEnd();
       } catch {
         // ignore errors, continue loop
       }
@@ -256,6 +257,12 @@ export default function SleepScreen() {
   );
 
   // ── Core playback loop ─────────────────────────────────────────
+  // Pattern per word (research-backed):
+  //   1. English meaning (so learner knows what to listen for)
+  //   2. Korean slow (hear it clearly)
+  //   3. Pause (brain processes / learner repeats mentally)
+  //   4. Korean normal speed (reinforce natural rhythm)
+  //   5. Longer pause before next word
   const runPlaybackLoop = useCallback(async (pool: SleepItem[], durationSec: number, speed: number) => {
     isCancelledRef.current = false;
     isPausedRef.current = false;
@@ -279,25 +286,34 @@ export default function SleepScreen() {
         }
         if (isCancelledRef.current) return;
 
-        // Speak Korean
+        // 1. English meaning first
+        await speakAsync(item.english, 'en-US', 1.0);
+        if (isCancelledRef.current) return;
+
+        // Brief pause
+        await wait(800);
+        if (isCancelledRef.current) return;
+
+        // 2. Korean (slow on first rep, normal on subsequent)
+        const koreanRate = rep === 1 ? speed * 0.75 : speed;
+        await speakAsync(item.korean, 'ko-KR', koreanRate);
+        if (isCancelledRef.current) return;
+
+        // 3. Pause for mental repetition
+        await wait(rep === 1 ? 2000 : 1500);
+        if (isCancelledRef.current) return;
+
+        // 4. Korean again at normal speed (reinforcement)
         await speakAsync(item.korean, 'ko-KR', speed);
         if (isCancelledRef.current) return;
 
-        // Wait 1.5s
+        // Pause between repetitions
         await wait(1500);
-        if (isCancelledRef.current) return;
-
-        // Speak English
-        await speakAsync('is ' + item.english, 'en-US', speed + 0.05);
-        if (isCancelledRef.current) return;
-
-        // Wait 1s between repetitions
-        await wait(1000);
         if (isCancelledRef.current) return;
       }
 
-      // Wait 2s between words
-      await wait(2000);
+      // Longer pause between words
+      await wait(2500);
       idx++;
     }
   }, [speakAsync, wait]);
@@ -323,25 +339,13 @@ export default function SleepScreen() {
       await activateKeepAwakeAsync();
     } catch {}
 
-    // Countdown timer
-    timerRef.current = setInterval(() => {
-      setSecondsRemaining((prev) => {
-        if (prev <= 1) {
-          handleStop();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    // Start speech loop
+    // Start speech loop (timer is managed by the pause/resume effect)
     runPlaybackLoop(pool, durationSec, speed);
   }, [contentType, selectedMinutes, speedType, runPlaybackLoop]);
 
   // ── Stop ───────────────────────────────────────────────────────
   const handleStop = useCallback(() => {
     isCancelledRef.current = true;
-    stopSpeaking();
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;

@@ -20,7 +20,7 @@
         "backgroundColor": "#0f172a"
       },
       "supportsTablet": false,
-      "buildNumber": "23",
+      "buildNumber": "24",
       "bundleIdentifier": "com.hanflow.korean",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Lzy Learn Korean needs microphone access so you can practice speaking Korean and get pronunciation feedback.",

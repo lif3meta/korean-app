@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, borderRadius, typography, shadows } from '@/lib/theme';
 import { useAppStore } from '@/lib/store';
 import { AudioButton } from '@/components/common/AudioButton';
-import { searchDictionary, dictionaryEntries, DictionaryEntry } from '@/data/dictionary';
+import { searchDictionary, allDictionaryEntries, DictionaryEntry } from '@/data/dictionary';
 import { searchDictionaryApi } from '@/lib/dictionaryApi';
 
 const POPULAR_WORDS = [
@@ -39,7 +39,7 @@ export default function DictionaryScreen() {
 
   const popularEntries = useMemo(() => {
     return POPULAR_WORDS.map((korean) =>
-      dictionaryEntries.find((e) => e.korean === korean)
+      allDictionaryEntries.find((e) => e.korean === korean)
     ).filter(Boolean) as DictionaryEntry[];
   }, []);
 

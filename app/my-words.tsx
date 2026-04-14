@@ -102,7 +102,7 @@ export default function MyWordsScreen() {
       <View style={[styles.practiceContainer, { paddingBottom: insets.bottom + spacing.lg }]}>
         <TouchableOpacity
           style={styles.practiceButton}
-          onPress={() => router.push('/lesson/vocab/review')}
+          onPress={() => router.push('/practice-words')}
           activeOpacity={0.7}
         >
           <Ionicons name="flash" size={20} color={colors.textOnPrimary} />

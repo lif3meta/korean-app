@@ -11,17 +11,20 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import {
+  useAudioRecorder,
+  useAudioPlayer,
+  RecordingPresets,
+  setAudioModeAsync,
+  setIsAudioActiveAsync,
+} from 'expo-audio';
 import { colors, borderRadius, spacing, shadows } from '@/lib/theme';
 import { useAppStore } from '@/lib/store';
 import {
   type RecordingState,
   type SpeechResult,
   requestMicPermission,
-  startRecording,
-  stopRecording,
   evaluateSpeech,
-  createPlaybackFromRecording,
-  cleanupRecording,
 } from '@/lib/speechRecognition';
 
 interface SpeechPracticeProps {
@@ -49,12 +52,15 @@ export function SpeechPractice({
   const [recordingState, setRecordingState] = useState<RecordingState>('idle');
   const [result, setResult] = useState<SpeechResult | null>(null);
   const [recordingUri, setRecordingUri] = useState<string | null>(null);
-  const [playbackSound, setPlaybackSound] = useState<any>(null);
   const [isPlayingBack, setIsPlayingBack] = useState(false);
   const [showTextInput, setShowTextInput] = useState(false);
   const [textInput, setTextInput] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
+
+  // expo-audio hooks
+  const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  const player = useAudioPlayer(recordingUri);
 
   // Pulse animation for recording indicator
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -122,18 +128,6 @@ export function SpeechPractice({
     }
   }, [recordingState]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (playbackSound) {
-        playbackSound.unloadAsync().catch(() => {});
-      }
-      if (recordingUri) {
-        cleanupRecording(recordingUri).catch(() => {});
-      }
-    };
-  }, [playbackSound, recordingUri]);
-
   const handleStartRecording = useCallback(async () => {
     if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     setErrorMessage(null);
@@ -147,24 +141,37 @@ export function SpeechPractice({
     }
 
     try {
+      await setIsAudioActiveAsync(true);
+      await setAudioModeAsync({
+        allowsRecording: true,
+        playsInSilentMode: true,
+        interruptionMode: 'doNotMix',
+      });
+      await recorder.prepareToRecordAsync();
+      recorder.record();
       setRecordingState('recording');
-      await startRecording();
-    } catch (err) {
+    } catch (err: any) {
       console.warn('Failed to start recording:', err);
-      setErrorMessage('Could not start recording. Please try again.');
+      setErrorMessage(err?.message || 'Could not start recording. Please try again.');
       setRecordingState('error');
     }
-  }, [hapticEnabled]);
+  }, [hapticEnabled, recorder]);
 
   const handleStopRecording = useCallback(async () => {
     if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     setRecordingState('processing');
     try {
-      const uri = await stopRecording();
+      await recorder.stop();
+      const status = recorder.getStatus();
+      const uri = status.url;
       if (uri) {
         setRecordingUri(uri);
-        // Show the self-assessment UI with playback
+        await setAudioModeAsync({
+          allowsRecording: false,
+          playsInSilentMode: true,
+          interruptionMode: 'duckOthers',
+        });
         setRecordingState('done');
       } else {
         setErrorMessage('Recording failed. Please try again.');
@@ -175,31 +182,26 @@ export function SpeechPractice({
       setErrorMessage('Something went wrong. Please try again.');
       setRecordingState('error');
     }
-  }, [hapticEnabled]);
+  }, [hapticEnabled, recorder]);
 
   const handlePlayback = useCallback(async () => {
-    if (!recordingUri) return;
+    if (!recordingUri || !player) return;
     if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     try {
-      // Unload previous sound if exists
-      if (playbackSound) {
-        await playbackSound.unloadAsync();
-        setPlaybackSound(null);
-      }
-
-      const sound = await createPlaybackFromRecording(recordingUri);
-      if (sound) {
-        setPlaybackSound(sound);
-        setIsPlayingBack(true);
-      } else {
+      if (isPlayingBack) {
+        player.pause();
         setIsPlayingBack(false);
+      } else {
+        player.seekTo(0);
+        player.play();
+        setIsPlayingBack(true);
       }
     } catch (err) {
       console.warn('Playback error:', err);
       setIsPlayingBack(false);
     }
-  }, [recordingUri, playbackSound, hapticEnabled]);
+  }, [recordingUri, player, isPlayingBack, hapticEnabled]);
 
   const handleSelfAssessment = useCallback(
     (assessment: 'perfect' | 'good' | 'close' | 'try_again') => {
@@ -242,25 +244,16 @@ export function SpeechPractice({
   const handleRetry = useCallback(() => {
     if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
-    // Clean up previous recording
-    if (recordingUri) {
-      cleanupRecording(recordingUri).catch(() => {});
-    }
-    if (playbackSound) {
-      playbackSound.unloadAsync().catch(() => {});
-    }
-
     setRecordingState('idle');
     setResult(null);
     setRecordingUri(null);
-    setPlaybackSound(null);
     setIsPlayingBack(false);
     setShowTextInput(false);
     setTextInput('');
     setErrorMessage(null);
     setRecordingDuration(0);
     onTryAgain();
-  }, [hapticEnabled, recordingUri, playbackSound, onTryAgain]);
+  }, [hapticEnabled, onTryAgain]);
 
   const handleDone = useCallback(() => {
     if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);

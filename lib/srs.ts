@@ -1,7 +1,10 @@
 import { getToday, addDays } from './utils';
 
+export type SRSCardType = 'vocab' | 'grammar' | 'sentence' | 'listening';
+
 export interface SRSCard {
-  wordId: string;
+  wordId: string; // kept for backward compat — acts as cardId
+  cardType?: SRSCardType; // undefined = 'vocab' (backward compat)
   easeFactor: number;
   interval: number;
   repetitions: number;
@@ -9,9 +12,10 @@ export interface SRSCard {
   lastReviewDate: string | null;
 }
 
-export function createSRSCard(wordId: string): SRSCard {
+export function createSRSCard(wordId: string, cardType: SRSCardType = 'vocab'): SRSCard {
   return {
     wordId,
+    cardType,
     easeFactor: 2.5,
     interval: 0,
     repetitions: 0,

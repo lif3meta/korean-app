@@ -1,216 +1,196 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, FlatList } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme';
-import { vocabulary, allCategories, categoryInfo, getWordsByCategory, VocabCategory } from '@/data/vocabulary';
-import { CategoryCard } from '@/components/vocab/CategoryCard';
+import { vocabulary, allCategories, categoryInfo, getWordsByCategory, VocabCategory, getVocabImageUrl } from '@/data/vocabulary';
+import { getVocabImage } from '@/data/vocabImages';
+import { CachedImage } from '@/components/common/CachedImage';
 import { useAppStore } from '@/lib/store';
 import { speakKorean } from '@/lib/audio';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const CARD_WIDTH = SCREEN_WIDTH - 48;
+type Level = 'all' | 'beginner' | 'intermediate' | 'advanced';
 
-type ViewMode = 'list' | 'cards';
+const LEVEL_CONFIG: Record<Level, { label: string; color: string }> = {
+  all: { label: 'All Levels', color: colors.primaryDark },
+  beginner: { label: 'Beginner', color: '#4CAF50' },
+  intermediate: { label: 'Intermediate', color: '#FF9800' },
+  advanced: { label: 'Advanced', color: '#F44336' },
+};
+
+function LevelBadge({ level }: { level: string }) {
+  const cfg = LEVEL_CONFIG[level as Level] || LEVEL_CONFIG.beginner;
+  return (
+    <View style={[styles.levelBadge, { backgroundColor: cfg.color + '20' }]}>
+      <Text style={[styles.levelBadgeText, { color: cfg.color }]}>{cfg.label}</Text>
+    </View>
+  );
+}
 
 export default function VocabScreen() {
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeCategory, setActiveCategory] = useState<VocabCategory | 'all'>('all');
-  const [cardIndex, setCardIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [activeLevel, setActiveLevel] = useState<Level>('all');
   const { learnedWords, markWordLearned, hapticEnabled, showRomanization } = useAppStore();
 
-  const words = activeCategory === 'all' ? vocabulary : getWordsByCategory(activeCategory);
-  const currentWord = words[cardIndex];
+  const words = useMemo(() => {
+    let filtered = activeCategory === 'all' ? vocabulary : getWordsByCategory(activeCategory);
+    if (activeLevel !== 'all') {
+      filtered = filtered.filter((w) => w.level === activeLevel);
+    }
+    return filtered;
+  }, [activeCategory, activeLevel]);
 
   const handleSpeak = useCallback((text: string) => {
     if (hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     speakKorean(text);
   }, [hapticEnabled]);
 
-  const handleCategoryChange = (cat: VocabCategory | 'all') => {
-    setActiveCategory(cat);
-    setCardIndex(0);
-    setIsFlipped(false);
-  };
+  // Count words per level for the current category
+  const levelCounts = useMemo(() => {
+    const base = activeCategory === 'all' ? vocabulary : getWordsByCategory(activeCategory);
+    return {
+      all: base.length,
+      beginner: base.filter((w) => w.level === 'beginner').length,
+      intermediate: base.filter((w) => w.level === 'intermediate').length,
+      advanced: base.filter((w) => w.level === 'advanced').length,
+    };
+  }, [activeCategory]);
 
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
+  const renderWord = useCallback(({ item: word }: { item: typeof words[0] }) => {
+    const isLearned = learnedWords.includes(word.id);
+    const localImage = getVocabImage(word.id);
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          const categoryWords = getWordsByCategory(word.category).filter(
+            (w) => activeLevel === 'all' || w.level === activeLevel
+          );
+          const wordIndex = categoryWords.findIndex((w) => w.id === word.id);
+          router.push(`/lesson/vocab/${word.category}?startIndex=${wordIndex >= 0 ? wordIndex : 0}&level=${activeLevel}`);
+        }}
+        activeOpacity={0.7}
+        style={[styles.listItem, isLearned && styles.listItemLearned]}
+      >
+        <View style={styles.listLeft}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            {localImage ? (
+              <Image source={localImage} style={styles.wordThumb} />
+            ) : (
+              <CachedImage uri={getVocabImageUrl(word)} style={styles.wordThumb} />
+            )}
+            <View style={{ flex: 1 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <Text style={styles.listKorean}>{word.korean}</Text>
+                <LevelBadge level={word.level} />
+              </View>
+              <Text style={styles.listEnglish}>{word.english}</Text>
+              {showRomanization && <Text style={styles.listRoman}>{word.romanization}</Text>}
+            </View>
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={(e) => { e.stopPropagation(); handleSpeak(word.korean); markWordLearned(word.id); }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          style={styles.playBtn}
+        >
+          <Ionicons name={isLearned ? 'checkmark-circle' : 'play-circle'} size={32} color={isLearned ? colors.success : colors.accent} />
+        </TouchableOpacity>
+      </TouchableOpacity>
+    );
+  }, [learnedWords, activeLevel, showRomanization, handleSpeak, markWordLearned]);
+
+  const listHeader = useMemo(() => (
+    <>
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Vocabulary</Text>
-          <Text style={styles.subtitle}>단어</Text>
-        </View>
-        <View style={styles.modeToggle}>
-          <TouchableOpacity
-            onPress={() => setViewMode('list')}
-            style={[styles.modeBtn, viewMode === 'list' && styles.modeBtnActive]}
-          >
-            <Ionicons name="list" size={16} color={viewMode === 'list' ? '#fff' : colors.textTertiary} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => { setViewMode('cards'); setCardIndex(0); setIsFlipped(false); }}
-            style={[styles.modeBtn, viewMode === 'cards' && styles.modeBtnActive]}
-          >
-            <Ionicons name="albums" size={16} color={viewMode === 'cards' ? '#fff' : colors.textTertiary} />
-          </TouchableOpacity>
+          <Text style={styles.subtitle}>단어 · {words.length} words</Text>
         </View>
       </View>
 
-      {viewMode === 'list' ? (
-        /* ===== LIST VIEW - categories then words ===== */
-        <>
-          {/* Category filter pills */}
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catScroll} contentContainerStyle={styles.catScrollContent}>
+      {/* Level filter */}
+      <View style={styles.levelRow}>
+        {(['all', 'beginner', 'intermediate', 'advanced'] as Level[]).map((level) => {
+          const cfg = LEVEL_CONFIG[level];
+          const count = levelCounts[level];
+          const isActive = activeLevel === level;
+          if (level !== 'all' && count === 0) return null;
+          return (
             <TouchableOpacity
-              onPress={() => handleCategoryChange('all')}
-              style={[styles.catPill, activeCategory === 'all' && styles.catPillActive]}
+              key={level}
+              onPress={() => setActiveLevel(level)}
+              style={[styles.levelPill, isActive && { backgroundColor: cfg.color, borderColor: cfg.color }]}
             >
-              <Text style={[styles.catPillText, activeCategory === 'all' && styles.catPillTextActive]}>All ({vocabulary.length})</Text>
+              <Text style={[styles.levelPillText, isActive && { color: '#fff' }]}>
+                {cfg.label} ({count})
+              </Text>
             </TouchableOpacity>
-            {allCategories.map((cat) => {
-              const info = categoryInfo[cat];
-              return (
-                <TouchableOpacity
-                  key={cat}
-                  onPress={() => handleCategoryChange(cat)}
-                  style={[styles.catPill, activeCategory === cat && styles.catPillActive]}
-                >
-                  <Text style={[styles.catPillText, activeCategory === cat && styles.catPillTextActive]}>{info.name}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
+          );
+        })}
+      </View>
 
-          {/* Word list */}
-          <View style={styles.listContainer}>
-            {words.map((word) => {
-              const isLearned = learnedWords.includes(word.id);
-              return (
-                <TouchableOpacity
-                  key={word.id}
-                  onPress={() => router.push(`/lesson/vocab/${word.category}`)}
-                  activeOpacity={0.7}
-                  style={[styles.listItem, isLearned && styles.listItemLearned]}
-                >
-                  <View style={styles.listLeft}>
-                    <Text style={styles.listKorean}>{word.korean}</Text>
-                    <Text style={styles.listEnglish}>{word.english}</Text>
-                    {showRomanization && <Text style={styles.listRoman}>{word.romanization}</Text>}
-                  </View>
-                  <TouchableOpacity
-                    onPress={(e) => { e.stopPropagation(); handleSpeak(word.korean); markWordLearned(word.id); }}
-                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                    style={styles.playBtn}
-                  >
-                    <Ionicons name={isLearned ? 'checkmark-circle' : 'play-circle'} size={32} color={isLearned ? colors.success : colors.accent} />
-                  </TouchableOpacity>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </>
-      ) : (
-        /* ===== CARDS VIEW ===== */
-        currentWord && (
-          <View style={styles.cardsContainer}>
-            {/* Category filter in cards mode too */}
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catScroll} contentContainerStyle={styles.catScrollContent}>
-              <TouchableOpacity
-                onPress={() => handleCategoryChange('all')}
-                style={[styles.catPill, activeCategory === 'all' && styles.catPillActive]}
-              >
-                <Text style={[styles.catPillText, activeCategory === 'all' && styles.catPillTextActive]}>All</Text>
-              </TouchableOpacity>
-              {allCategories.map((cat) => (
-                <TouchableOpacity
-                  key={cat}
-                  onPress={() => handleCategoryChange(cat)}
-                  style={[styles.catPill, activeCategory === cat && styles.catPillActive]}
-                >
-                  <Text style={[styles.catPillText, activeCategory === cat && styles.catPillTextActive]}>{categoryInfo[cat].name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-
-            <Text style={styles.cardCounter}>{cardIndex + 1} / {words.length}</Text>
-            <TouchableOpacity onPress={() => setIsFlipped(!isFlipped)} activeOpacity={0.9} style={styles.cardWrapper}>
-              {!isFlipped ? (
-                <View style={[styles.card, styles.cardFront]}>
-                  <Text style={styles.cardHint}>Tap to flip</Text>
-                  <Text style={styles.cardKorean}>{currentWord.korean}</Text>
-                  {showRomanization && <Text style={styles.cardRoman}>{currentWord.romanization}</Text>}
-                  <View style={styles.cardBadge}>
-                    <Text style={styles.cardBadgeText}>{currentWord.partOfSpeech}</Text>
-                  </View>
-                </View>
-              ) : (
-                <View style={[styles.card, styles.cardBack]}>
-                  <Text style={styles.cardHint}>Tap to flip back</Text>
-                  <TouchableOpacity onPress={() => handleSpeak(currentWord.korean)} style={styles.cardSpeakBtn}>
-                    <Ionicons name="volume-high" size={20} color={colors.primary} />
-                  </TouchableOpacity>
-                  <Text style={styles.cardEnglish}>{currentWord.english}</Text>
-                  <Text style={styles.cardKoreanSmall}>{currentWord.korean}</Text>
-                  {currentWord.example && (
-                    <View style={styles.cardExample}>
-                      <Text style={styles.cardExKorean}>{currentWord.example.korean}</Text>
-                      <Text style={styles.cardExEnglish}>{currentWord.example.english}</Text>
-                    </View>
-                  )}
-                  {currentWord.notes && <Text style={styles.cardNotes}>{currentWord.notes}</Text>}
-                </View>
-              )}
+      {/* Category filter pills */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catScroll} contentContainerStyle={styles.catScrollContent}>
+        <TouchableOpacity
+          onPress={() => setActiveCategory('all')}
+          style={[styles.catPill, activeCategory === 'all' && styles.catPillActive]}
+        >
+          <Text style={[styles.catPillText, activeCategory === 'all' && styles.catPillTextActive]}>All</Text>
+        </TouchableOpacity>
+        {allCategories.map((cat) => {
+          const info = categoryInfo[cat];
+          return (
+            <TouchableOpacity
+              key={cat}
+              onPress={() => setActiveCategory(cat)}
+              style={[styles.catPill, activeCategory === cat && styles.catPillActive]}
+            >
+              <Text style={[styles.catPillText, activeCategory === cat && styles.catPillTextActive]}>{info.name}</Text>
             </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </>
+  ), [words.length, activeLevel, activeCategory, levelCounts]);
 
-            {isFlipped && !learnedWords.includes(currentWord.id) && (
-              <TouchableOpacity
-                onPress={() => {
-                  markWordLearned(currentWord.id);
-                  if (hapticEnabled) Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-                }}
-                style={styles.markLearnedBtn}
-              >
-                <Ionicons name="checkmark-circle" size={18} color="#fff" />
-                <Text style={styles.markLearnedText}>Mark Learned</Text>
-              </TouchableOpacity>
-            )}
+  const listEmpty = useMemo(() => (
+    <View style={styles.emptyState}>
+      <Ionicons name="book-outline" size={48} color={colors.textTertiary} />
+      <Text style={styles.emptyText}>No words for this filter</Text>
+    </View>
+  ), []);
 
-            <View style={styles.cardNav}>
-              <TouchableOpacity
-                onPress={() => { setCardIndex((i) => i - 1); setIsFlipped(false); }}
-                disabled={cardIndex === 0}
-                style={[styles.cardNavBtn, cardIndex === 0 && styles.cardNavBtnDisabled]}
-              >
-                <Ionicons name="chevron-back" size={24} color={cardIndex === 0 ? colors.textTertiary : colors.primary} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => { setCardIndex((i) => i + 1); setIsFlipped(false); }}
-                disabled={cardIndex === words.length - 1}
-                style={[styles.cardNavBtn, cardIndex === words.length - 1 && styles.cardNavBtnDisabled]}
-              >
-                <Ionicons name="chevron-forward" size={24} color={cardIndex === words.length - 1 ? colors.textTertiary : colors.primary} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )
-      )}
-    </ScrollView>
+  return (
+    <FlatList
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 100 }}
+      data={words}
+      keyExtractor={(item) => item.id}
+      renderItem={renderWord}
+      ListHeaderComponent={listHeader}
+      ListEmptyComponent={listEmpty}
+      initialNumToRender={15}
+      maxToRenderPerBatch={10}
+      windowSize={5}
+      getItemLayout={(_, index) => ({ length: 72, offset: 72 * index, index })}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: spacing.xl, paddingBottom: 0 },
+  header: { padding: spacing.xl, paddingBottom: 0 },
   title: { ...typography.title2, color: colors.textPrimary },
   subtitle: { ...typography.footnote, color: colors.textTertiary },
-  modeToggle: { flexDirection: 'row', backgroundColor: colors.surfaceLow, borderRadius: borderRadius.full, padding: 2 },
-  modeBtn: { paddingHorizontal: spacing.md, paddingVertical: spacing.xs, borderRadius: borderRadius.full },
-  modeBtnActive: { backgroundColor: colors.primaryDark },
+
+  // Level filter
+  levelRow: { flexDirection: 'row', paddingHorizontal: spacing.xl, gap: spacing.xs, marginTop: spacing.md, flexWrap: 'wrap' },
+  levelPill: { borderRadius: borderRadius.full, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderWidth: 1.5, borderColor: colors.borderLight, backgroundColor: colors.surface },
+  levelPillText: { fontSize: 12, fontFamily: 'Jakarta-SemiBold', color: colors.textSecondary },
 
   // Category pills
-  catScroll: { marginTop: spacing.md },
+  catScroll: { marginTop: spacing.sm },
   catScrollContent: { paddingHorizontal: spacing.xl, gap: spacing.xs },
   catPill: { backgroundColor: colors.surface, borderRadius: borderRadius.full, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderWidth: 1, borderColor: colors.borderLight },
   catPillActive: { backgroundColor: colors.primaryDark, borderColor: colors.primaryDark },
@@ -231,42 +211,18 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   listItemLearned: { borderColor: colors.success, backgroundColor: colors.successBg },
-  listLeft: { flex: 1, gap: 2 },
+  listLeft: { flex: 1 },
+  wordThumb: { width: 44, height: 44, borderRadius: 10 },
   listKorean: { fontSize: 20, fontFamily: 'Jakarta-SemiBold', color: colors.textPrimary },
   listEnglish: { fontSize: 14, fontFamily: 'Jakarta-Regular', color: colors.textSecondary },
   listRoman: { fontSize: 11, fontFamily: 'Jakarta-Regular', color: colors.textTertiary, fontStyle: 'italic' },
   playBtn: { padding: 4 },
 
-  // Cards view
-  cardsContainer: { alignItems: 'center', gap: spacing.md },
-  cardCounter: { ...typography.caption, color: colors.textTertiary },
-  cardWrapper: { width: CARD_WIDTH, height: 340 },
-  card: {
-    width: '100%',
-    height: '100%',
-    borderRadius: borderRadius.xxl,
-    padding: spacing.xxl,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...shadows.lg,
-  },
-  cardFront: { backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.primaryPale },
-  cardBack: { backgroundColor: colors.primaryPale, borderWidth: 2, borderColor: colors.primary },
-  cardHint: { ...typography.caption, color: colors.textTertiary, position: 'absolute', top: spacing.lg, left: spacing.lg },
-  cardSpeakBtn: { position: 'absolute', top: spacing.lg, right: spacing.lg, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.6)', alignItems: 'center', justifyContent: 'center' },
-  cardKorean: { fontSize: 48, color: colors.textPrimary, letterSpacing: 2 },
-  cardRoman: { ...typography.subhead, color: colors.textSecondary, fontStyle: 'italic', marginTop: spacing.sm },
-  cardEnglish: { ...typography.title2, color: colors.textPrimary, textAlign: 'center' },
-  cardKoreanSmall: { fontSize: 24, color: colors.textSecondary, marginTop: spacing.sm },
-  cardBadge: { backgroundColor: colors.primaryFaint, paddingHorizontal: spacing.md, paddingVertical: spacing.xs, borderRadius: borderRadius.full, marginTop: spacing.md },
-  cardBadgeText: { ...typography.caption, color: colors.primaryDark },
-  cardExample: { backgroundColor: 'rgba(255,255,255,0.6)', padding: spacing.md, borderRadius: borderRadius.md, marginTop: spacing.lg, alignItems: 'center' },
-  cardExKorean: { ...typography.body, color: colors.textPrimary },
-  cardExEnglish: { ...typography.footnote, color: colors.textSecondary, marginTop: 2 },
-  cardNotes: { ...typography.caption, color: colors.textTertiary, marginTop: spacing.md, fontStyle: 'italic', textAlign: 'center' },
-  markLearnedBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.xs, backgroundColor: colors.accent, paddingVertical: spacing.md, paddingHorizontal: spacing.xxl, borderRadius: borderRadius.xl },
-  markLearnedText: { fontSize: 14, fontFamily: 'Jakarta-Bold', color: '#fff' },
-  cardNav: { flexDirection: 'row', gap: spacing.xxl },
-  cardNavBtn: { width: 52, height: 52, borderRadius: 26, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', ...shadows.sm },
-  cardNavBtnDisabled: { opacity: 0.4 },
+  // Level badge
+  levelBadge: { paddingHorizontal: 6, paddingVertical: 1, borderRadius: 6 },
+  levelBadgeText: { fontSize: 9, fontFamily: 'Jakarta-SemiBold', textTransform: 'uppercase' },
+
+  // Empty state
+  emptyState: { alignItems: 'center', paddingVertical: spacing.xxl, gap: spacing.md },
+  emptyText: { ...typography.subhead, color: colors.textTertiary },
 });

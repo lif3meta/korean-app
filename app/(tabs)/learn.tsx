@@ -14,6 +14,9 @@ import { slangWords } from '@/data/slang';
 import { sentences } from '@/data/sentences';
 import { pronunciationLessons } from '@/data/pronunciation';
 import { cultureLessons } from '@/data/culture';
+import { listeningExercises } from '@/data/listeningExercises';
+import { writingPrompts } from '@/data/writingPrompts';
+import { audioLessonSeries, getTotalAudioEpisodes } from '@/data/audioLessons';
 import { getPercentage } from '@/lib/utils';
 
 export default function LearnScreen() {
@@ -27,8 +30,19 @@ export default function LearnScreen() {
   const sentencesPct = getPercentage(sentencesDone, sentences.length);
   const pronDone = Object.keys(completedLessons).filter(k => k.startsWith('pron_')).length;
   const pronPct = getPercentage(pronDone, pronunciationLessons.length);
+  const hwDone = Object.keys(completedLessons).filter(k => k.startsWith('hw_')).length;
+  const hwPct = getPercentage(hwDone, 5);
   const cultureDone = Object.keys(completedLessons).filter(k => k.startsWith('cult_')).length;
   const culturePct = getPercentage(cultureDone, cultureLessons.length);
+  const listenDone = Object.keys(completedLessons).filter(k => k.startsWith('listen_')).length;
+  const listenPct = getPercentage(listenDone, listeningExercises.length);
+  const writeDone = Object.keys(completedLessons).filter(k => k.startsWith('write_')).length;
+  const writePct = getPercentage(writeDone, writingPrompts.length);
+  const storyDone = Object.keys(completedLessons).filter(k => k.startsWith('story_')).length;
+  const storyPct = getPercentage(storyDone, 20);
+  const audioDone = Object.keys(completedLessons).filter(k => k.startsWith('audio_')).length;
+  const audioTotal = getTotalAudioEpisodes();
+  const audioPct = getPercentage(audioDone, audioTotal);
 
   const categories = [
     {
@@ -41,7 +55,7 @@ export default function LearnScreen() {
       stat: `${learnedCharacters.length}/${allHangul.length} characters`,
       color: colors.primaryLight,
       gradient: ['#FF80AB', '#E040FB'] as readonly [string, string],
-      route: '/lesson/hangul/' as const,
+      route: '/lesson/hangul' as const,
     },
     {
       title: 'Pronunciation',
@@ -68,6 +82,18 @@ export default function LearnScreen() {
       route: '/lesson/tongue' as const,
     },
     {
+      title: 'Handwriting',
+      titleKorean: '손글씨',
+      description: 'Learn to write Korean',
+      icon: 'brush',
+      image: require('@/assets/images/sloth-grammar.png'),
+      progress: hwPct,
+      stat: `${hwDone}/5 lessons`,
+      color: '#6366f1',
+      gradient: ['#6366f1', '#4f46e5'] as readonly [string, string],
+      route: '/lesson/handwriting' as const,
+    },
+    {
       title: 'Vocabulary',
       titleKorean: '어휘',
       description: 'Build your word bank',
@@ -77,7 +103,7 @@ export default function LearnScreen() {
       stat: `${learnedWords.length}/${vocabulary.length} words`,
       color: colors.accent,
       gradient: ['#00E5FF', '#7C4DFF'] as readonly [string, string],
-      route: '/lesson/vocab/' as const,
+      route: '/lesson/vocab' as const,
     },
     {
       title: 'Grammar',
@@ -89,7 +115,7 @@ export default function LearnScreen() {
       stat: `${Object.keys(completedLessons).filter(k => k.startsWith('g_')).length}/${grammarLessons.length} lessons`,
       color: colors.secondary,
       gradient: ['#FFD740', '#FFC107'] as readonly [string, string],
-      route: '/lesson/grammar/' as const,
+      route: '/lesson/grammar' as const,
     },
     {
       title: 'Sentences',
@@ -104,13 +130,37 @@ export default function LearnScreen() {
       route: '/lesson/sentences' as const,
     },
     {
+      title: 'Listening',
+      titleKorean: '듣기',
+      description: 'Train your ears',
+      icon: 'ear',
+      image: require('@/assets/images/sloth-speaking.png'),
+      progress: listenPct,
+      stat: `${listenDone}/${listeningExercises.length} exercises`,
+      color: '#06b6d4',
+      gradient: ['#06b6d4', '#0891b2'] as readonly [string, string],
+      route: '/lesson/listening' as const,
+    },
+    {
+      title: 'Audio Lessons',
+      titleKorean: '오디오 수업',
+      description: 'Podcast-style listening',
+      icon: 'headset',
+      image: require('@/assets/images/sloth-speaking.png'),
+      progress: audioPct,
+      stat: `${audioDone}/${audioTotal} episodes`,
+      color: '#6366f1',
+      gradient: ['#6366f1', '#8b5cf6'] as readonly [string, string],
+      route: '/lesson/audio' as const,
+    },
+    {
       title: 'Stories',
       titleKorean: '\uC774\uC57C\uAE30',
       description: 'Learn through manga',
       icon: 'book-outline',
       image: require('@/assets/images/sloth-stories.png'),
       progress: 0,
-      stat: '3 chapters',
+      stat: 'Reading practice',
       color: '#7C4DFF',
       gradient: ['#1A0A2E', '#7C4DFF'] as readonly [string, string],
       route: '/lesson/manga' as const,
@@ -140,13 +190,25 @@ export default function LearnScreen() {
       route: '/lesson/reading' as const,
     },
     {
+      title: 'Writing',
+      titleKorean: '\uC4F0\uAE30',
+      description: 'Practice writing Korean',
+      icon: 'pencil',
+      image: require('@/assets/images/sloth-grammar.png'),
+      progress: writePct,
+      stat: `${writeDone} exercises`,
+      color: '#8b5cf6',
+      gradient: ['#8b5cf6', '#7c3aed'] as readonly [string, string],
+      route: '/lesson/writing' as const,
+    },
+    {
       title: 'Watch',
       titleKorean: '영상',
-      description: 'K-drama & YouTube',
+      description: 'Korean YouTube lessons',
       icon: 'play-circle',
       image: require('@/assets/images/sloth-watch.png'),
       progress: 0,
-      stat: '22 videos',
+      stat: '28 videos',
       color: '#FF5252',
       gradient: ['#FF5252', '#D32F2F'] as readonly [string, string],
       route: '/lesson/videos' as const,
@@ -163,13 +225,49 @@ export default function LearnScreen() {
       gradient: ['#FF9800', '#E65100'] as readonly [string, string],
       route: '/lesson/culture' as const,
     },
+    {
+      title: 'Hanja',
+      titleKorean: '한자',
+      description: 'Chinese character roots',
+      icon: 'language',
+      image: require('@/assets/images/sloth-grammar.png'),
+      progress: 0,
+      stat: '30 characters',
+      color: '#dc2626',
+      gradient: ['#dc2626', '#991b1b'] as readonly [string, string],
+      route: '/lesson/hanja' as const,
+    },
+    {
+      title: 'Mini Stories',
+      titleKorean: '짧은 이야기',
+      description: 'Short stories with questions',
+      icon: 'bookmarks',
+      image: require('@/assets/images/sloth-stories.png'),
+      progress: storyPct,
+      stat: `${storyDone}/20 stories`,
+      color: '#0d9488',
+      gradient: ['#14b8a6', '#0d9488'] as readonly [string, string],
+      route: '/lesson/stories' as const,
+    },
+    {
+      title: 'Real Korean',
+      titleKorean: '진짜 한국어',
+      description: 'Headlines, lyrics & dialogues',
+      icon: 'earth',
+      image: require('@/assets/images/sloth-culture.png'),
+      progress: 0,
+      stat: '15 pieces',
+      color: '#0ea5e9',
+      gradient: ['#0ea5e9', '#0284c7'] as readonly [string, string],
+      route: '/lesson/native' as const,
+    },
   ];
 
-  // Group categories into sections
+  // Group categories — lessons only (practice items go on Practice tab)
   const sections = [
-    { title: 'Foundations', titleKorean: '기초', items: categories.filter(c => ['Hangul', 'Pronunciation', 'Tongue Guide', 'Vocabulary', 'Grammar'].includes(c.title)) },
-    { title: 'Practice', titleKorean: '연습', items: categories.filter(c => ['Sentences', 'Reading', 'Stories'].includes(c.title)) },
-    { title: 'Explore', titleKorean: '탐구', items: categories.filter(c => ['Slang', 'Culture', 'Watch'].includes(c.title)) },
+    { title: 'Foundations', titleKorean: '기초', items: categories.filter(c => ['Hangul', 'Pronunciation', 'Tongue Guide', 'Handwriting', 'Vocabulary', 'Grammar'].includes(c.title)) },
+    { title: 'Content', titleKorean: '콘텐츠', items: categories.filter(c => ['Stories', 'Reading', 'Mini Stories', 'Culture', 'Slang', 'Hanja', 'Real Korean'].includes(c.title)) },
+    { title: 'Media', titleKorean: '미디어', items: categories.filter(c => ['Watch'].includes(c.title)) },
   ];
 
   const renderCard = (cat: typeof categories[0]) => (

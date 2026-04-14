@@ -15,7 +15,7 @@ import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme'
 import { useAppStore } from '@/lib/store';
 import { getSentencesByLevel, sentenceLevels } from '@/data/sentences';
 import type { Sentence } from '@/data/sentences';
-import { speakKorean, speakKoreanSlow } from '@/lib/audio';
+import { speakKorean } from '@/lib/audio';
 import { SpeechPractice } from '@/components/common/SpeechPractice';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -76,10 +76,10 @@ export default function SentencePracticeScreen() {
     }, 2000);
   }, [sentence, pulseAnim]);
 
-  const handlePlaySlow = useCallback(() => {
+  const handlePlayAgain = useCallback(() => {
     if (!sentence) return;
     setIsPlaying(true);
-    speakKoreanSlow(sentence.korean);
+    speakKorean(sentence.korean);
 
     Animated.sequence([
       Animated.timing(pulseAnim, {
@@ -225,17 +225,6 @@ export default function SentencePracticeScreen() {
                 />
               </TouchableOpacity>
             </Animated.View>
-            <TouchableOpacity
-              onPress={handlePlaySlow}
-              style={[
-                styles.slowButton,
-                isPlaying && styles.slowButtonActive,
-              ]}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="speedometer-outline" size={20} color="#fff" />
-              <Text style={styles.slowButtonText}>Slow</Text>
-            </TouchableOpacity>
           </View>
           <Text style={styles.playHint}>
             {step === 'listen'
@@ -533,23 +522,6 @@ const styles = StyleSheet.create({
   },
   playButtonActive: {
     backgroundColor: colors.primaryDark,
-  },
-  slowButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: colors.textTertiary,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.full,
-  },
-  slowButtonActive: {
-    backgroundColor: colors.primaryDark,
-  },
-  slowButtonText: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 13,
-    color: '#fff',
   },
   playHint: {
     fontFamily: 'Poppins-Regular',

@@ -1,154 +1,135 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { shadows, spacing } from '@/lib/theme';
+import { colors, borderRadius, spacing, shadows } from '@/lib/theme';
 import { useAppStore } from '@/lib/store';
+import { Card } from '@/components/ui/Card';
 
-interface PracticeItem {
-  id: string;
+interface PracticeCategory {
   title: string;
   titleKorean: string;
+  description: string;
   icon: string;
-  iconColor: string;
-  bgColor: string;
-  desc: string;
+  image: any;
+  stat: string;
+  gradient: readonly [string, string];
   route: string;
-  image?: ImageSourcePropType;
 }
 
 export default function PracticeScreen() {
   const insets = useSafeAreaInsets();
-  const { getDueCards, quizHistory } = useAppStore();
-  const dueCards = getDueCards();
+  const srsCards = useAppStore((s) => s.srsCards);
+  const quizHistory = useAppStore((s) => s.quizHistory);
+  const dueCards = useMemo(() => {
+    const today = new Date().toISOString().split('T')[0];
+    return Object.values(srsCards).filter((c) => c.nextReviewDate <= today);
+  }, [srsCards]);
 
-  const quizTypes: PracticeItem[] = [
-    { id: 'hangul', title: 'Hangul Quiz', titleKorean: '한글 퀴즈', icon: 'text', iconColor: '#E91E63', bgColor: '#FCE4EC', desc: 'Test your character knowledge', route: '/quiz/hangul', image: require('@/assets/images/sloth-hangul.png') },
-    { id: 'vocab', title: 'Vocab Quiz', titleKorean: '어휘 퀴즈', icon: 'book', iconColor: '#00BCD4', bgColor: '#E0F7FA', desc: 'Test your word knowledge', route: '/quiz/vocab', image: require('@/assets/images/sloth-vocab.png') },
-    { id: 'grammar', title: 'Grammar Quiz', titleKorean: '문법 퀴즈', icon: 'pencil', iconColor: '#FF9800', bgColor: '#FFF3E0', desc: 'Test your grammar skills', route: '/quiz/grammar', image: require('@/assets/images/sloth-grammar.png') },
-    { id: 'mixed', title: 'Mixed Quiz', titleKorean: '종합 도전', icon: 'game-controller', iconColor: '#9C27B0', bgColor: '#F3E5F5', desc: 'All topics combined', route: '/quiz/mixed', image: require('@/assets/images/sloth-quiz.png') },
+  const quizzes: PracticeCategory[] = [
+    { title: 'Hangul Quiz', titleKorean: '한글 퀴즈', description: 'Test character knowledge', icon: 'text', image: require('@/assets/images/sloth-hangul.png'), stat: 'Dynamic questions', gradient: ['#E91E63', '#AD1457'], route: '/quiz/hangul' },
+    { title: 'Vocab Quiz', titleKorean: '어휘 퀴즈', description: 'Test word knowledge', icon: 'book', image: require('@/assets/images/sloth-vocab.png'), stat: 'Dynamic questions', gradient: ['#00BCD4', '#00838F'], route: '/quiz/vocab' },
+    { title: 'Grammar Quiz', titleKorean: '문법 퀴즈', description: 'Test grammar skills', icon: 'pencil', image: require('@/assets/images/sloth-grammar.png'), stat: 'Particles & conjugation', gradient: ['#FF9800', '#E65100'], route: '/quiz/grammar' },
+    { title: 'Mixed Quiz', titleKorean: '종합 도전', description: 'All topics combined', icon: 'game-controller', image: require('@/assets/images/sloth-quiz.png'), stat: 'Everything mixed', gradient: ['#9C27B0', '#6A1B9A'], route: '/quiz/mixed' },
   ];
 
-  const practiceActivities: PracticeItem[] = [
-    { id: 'flashcards', title: 'Flashcard Review', titleKorean: '플래시카드', icon: 'albums', iconColor: '#3F51B5', bgColor: '#E8EAF6', desc: 'Spaced repetition review', route: '/lesson/vocab/review', image: require('@/assets/images/sloth-flashcards.png') },
-    { id: 'sentences', title: 'Build Sentences', titleKorean: '문장 만들기', icon: 'chatbubble-ellipses', iconColor: '#00BCD4', bgColor: '#E0F7FA', desc: 'Progressive sentence building', route: '/lesson/sentences', image: require('@/assets/images/sloth-sentences.png') },
-    { id: 'tongue', title: 'Tongue Guide', titleKorean: '혀 위치', icon: 'body', iconColor: '#E91E63', bgColor: '#FCE4EC', desc: 'Mouth and tongue positions', route: '/lesson/tongue', image: require('@/assets/images/sloth-tongue.png') },
-    { id: 'pronunciation', title: 'Pronunciation', titleKorean: '발음 연습', icon: 'mic', iconColor: '#F44336', bgColor: '#FFEBEE', desc: 'Sound rules and practice', route: '/lesson/pronunciation', image: require('@/assets/images/sloth-pronunciation.png') },
-    { id: 'reading', title: 'Reading Practice', titleKorean: '읽기 연습', icon: 'reader', iconColor: '#4CAF50', bgColor: '#E8F5E9', desc: 'Tap-to-translate passages', route: '/lesson/reading', image: require('@/assets/images/sloth-reading.png') },
-    { id: 'slang', title: 'K-Pop Slang', titleKorean: '슬랭 연습', icon: 'sparkles', iconColor: '#FF4081', bgColor: '#FCE4EC', desc: 'Internet and K-pop lingo', route: '/lesson/slang', image: require('@/assets/images/sloth-slang.png') },
-    { id: 'manga', title: 'Story Reading', titleKorean: '이야기 읽기', icon: 'book', iconColor: '#7C4DFF', bgColor: '#EDE7F6', desc: 'Learn through manga stories', route: '/lesson/manga', image: require('@/assets/images/sloth-stories.png') },
-    { id: 'culture', title: 'Culture Lessons', titleKorean: '문화 수업', icon: 'globe', iconColor: '#FF9800', bgColor: '#FFF3E0', desc: 'Honorifics, customs, survival', route: '/lesson/culture', image: require('@/assets/images/sloth-culture.png') },
+  const activities: PracticeCategory[] = [
+    { title: 'Flashcard Review', titleKorean: '플래시카드', description: 'Spaced repetition review', icon: 'albums', image: require('@/assets/images/sloth-flashcards.png'), stat: `${dueCards.length} cards due`, gradient: ['#3F51B5', '#1A237E'], route: '/lesson/vocab/review' },
+    { title: 'Build Sentences', titleKorean: '문장 만들기', description: 'Progressive sentence building', icon: 'chatbubble-ellipses', image: require('@/assets/images/sloth-sentences.png'), stat: '6 difficulty levels', gradient: ['#00E5FF', '#00BCD4'], route: '/lesson/sentences' },
+    { title: 'Listening Practice', titleKorean: '듣기 연습', description: 'Train your listening skills', icon: 'ear', image: require('@/assets/images/sloth-speaking.png'), stat: 'Dictation & identify', gradient: ['#06b6d4', '#0891b2'], route: '/lesson/listening' },
+    { title: 'Writing Practice', titleKorean: '쓰기 연습', description: 'Translate and write Korean', icon: 'pencil', image: require('@/assets/images/sloth-grammar.png'), stat: 'Translation & particles', gradient: ['#8b5cf6', '#7c3aed'], route: '/lesson/writing' },
+    { title: 'Handwriting', titleKorean: '손글씨 연습', description: 'Draw characters & get checked', icon: 'brush', image: require('@/assets/images/sloth-hangul.png'), stat: 'AI-checked writing', gradient: ['#f97316', '#ea580c'], route: '/practice-handwriting' },
+    { title: 'Pronunciation', titleKorean: '발음 연습', description: 'Sound rules and practice', icon: 'mic', image: require('@/assets/images/sloth-pronunciation.png'), stat: 'Vowels & consonants', gradient: ['#F44336', '#C62828'], route: '/lesson/pronunciation' },
+    { title: 'Reading Practice', titleKorean: '읽기 연습', description: 'Tap-to-translate passages', icon: 'reader', image: require('@/assets/images/sloth-reading.png'), stat: 'Graded passages', gradient: ['#4CAF50', '#2E7D32'], route: '/lesson/reading' },
+    { title: 'Hanja Explorer', titleKorean: '한자 탐험', description: 'Chinese character families', icon: 'language', image: require('@/assets/images/sloth-grammar.png'), stat: '30 character roots', gradient: ['#dc2626', '#991b1b'], route: '/lesson/hanja' },
   ];
 
-  const toolsSection: PracticeItem[] = [
-    { id: 'sleep', title: 'Parrot Learning', titleKorean: '반말 학습', icon: 'moon', iconColor: '#5C6BC0', bgColor: '#E8EAF6', desc: 'Repeat words on repeat', route: '/sleep', image: require('@/assets/images/sloth-sleep.png') },
-    { id: 'dictionary', title: 'Dictionary', titleKorean: '사전', icon: 'search', iconColor: '#FF5722', bgColor: '#FBE9E7', desc: '384+ Korean words', route: '/dictionary', image: require('@/assets/images/sloth-dictionary.png') },
-    { id: 'mywords', title: 'My Words', titleKorean: '내 단어', icon: 'bookmark', iconColor: '#FF9800', bgColor: '#FFF3E0', desc: 'Your saved vocabulary', route: '/my-words', image: require('@/assets/images/sloth-mywords.png') },
-    { id: 'videos', title: 'Watch & Learn', titleKorean: '영상 보기', icon: 'play-circle', iconColor: '#F44336', bgColor: '#FFEBEE', desc: 'K-drama YouTube lessons', route: '/lesson/videos', image: require('@/assets/images/sloth-watch.png') },
+  const drills: PracticeCategory[] = [
+    { title: 'Fast Hangul', titleKorean: '빠른 한글', description: 'Speed drill letters & sounds', icon: 'flash', image: require('@/assets/images/sloth-hangul.png'), stat: 'Configurable speed', gradient: ['#ec4899', '#be185d'], route: '/fast-hangul' },
+    { title: 'Parrot Learning', titleKorean: '반복 학습', description: 'Repeat phrases on loop', icon: 'sync', image: require('@/assets/images/sloth-sleep.png'), stat: 'Passive learning', gradient: ['#5C6BC0', '#283593'], route: '/sleep' },
+  ];
+
+  const tools: PracticeCategory[] = [
+    { title: 'Dictionary', titleKorean: '사전', description: '384+ Korean words', icon: 'search', image: require('@/assets/images/sloth-dictionary.png'), stat: 'Search & save', gradient: ['#FF5722', '#BF360C'], route: '/dictionary' },
+    { title: 'My Words', titleKorean: '내 단어', description: 'Your saved vocabulary', icon: 'bookmark', image: require('@/assets/images/sloth-mywords.png'), stat: 'Personal wordbank', gradient: ['#FF9800', '#E65100'], route: '/my-words' },
+  ];
+
+  const sections = [
+    { title: 'Quizzes', titleKorean: '퀴즈', items: quizzes },
+    { title: 'Activities', titleKorean: '활동', items: activities },
+    { title: 'Drills', titleKorean: '드릴', items: drills },
+    { title: 'Tools', titleKorean: '도구', items: tools },
   ];
 
   const recentResults = quizHistory.slice(0, 3);
 
+  const renderCard = (cat: PracticeCategory) => (
+    <TouchableOpacity key={cat.title} onPress={() => router.push(cat.route as any)} activeOpacity={0.8}>
+      <Card variant="elevated" style={styles.categoryCard}>
+        <LinearGradient colors={cat.gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.categoryGradient}>
+          <View style={styles.categoryContent}>
+            <View style={styles.categoryInfo}>
+              <View style={styles.categoryHeader}>
+                <Ionicons name={cat.icon as any} size={20} color="#fff" />
+                <Text style={styles.categoryTitle}>{cat.title}</Text>
+              </View>
+              <Text style={styles.categoryKorean}>{cat.titleKorean}</Text>
+              <Text style={styles.categoryDesc}>{cat.description}</Text>
+              <Text style={styles.categoryStat}>{cat.stat}</Text>
+            </View>
+            <Image source={cat.image} style={styles.categoryImage} />
+          </View>
+        </LinearGradient>
+      </Card>
+    </TouchableOpacity>
+  );
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: spacing.xxxl }} showsVerticalScrollIndicator={false}>
-      {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
-        <View>
-          <Text style={styles.headerTitle}>Practice</Text>
-          <Text style={styles.headerSub}>연습하기</Text>
-        </View>
+        <Text style={styles.headerTitle}>Practice</Text>
+        <Text style={styles.headerSub}>연습하기</Text>
       </View>
 
       <View style={styles.content}>
         {/* SRS Review Banner */}
-        <TouchableOpacity
-          activeOpacity={0.85}
-          onPress={dueCards.length > 0 ? () => router.push('/lesson/vocab/review') : undefined}
-          style={styles.reviewBanner}
-        >
-          <View style={[styles.reviewDot, { backgroundColor: dueCards.length > 0 ? '#ec4899' : '#10b981' }]}>
-            <Ionicons name={dueCards.length > 0 ? 'refresh' : 'checkmark'} size={20} color="#fff" />
+        {dueCards.length > 0 && (
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => router.push('/lesson/vocab/review')}
+            style={styles.reviewBanner}
+          >
+            <View style={styles.reviewDot}>
+              <Ionicons name="refresh" size={20} color="#fff" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.reviewTitle}>{dueCards.length} cards due for review</Text>
+              <Text style={styles.reviewSub}>Review now to strengthen memory</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={colors.textTertiary} />
+          </TouchableOpacity>
+        )}
+
+        {/* Sections */}
+        {sections.map((section) => (
+          <View key={section.title} style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionLabel}>{section.titleKorean}</Text>
+              <Text style={styles.sectionTitle}>{section.title}</Text>
+            </View>
+            {section.items.map(renderCard)}
           </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.reviewTitle}>
-              {dueCards.length > 0 ? `${dueCards.length} cards due for review` : 'All caught up!'}
-            </Text>
-            <Text style={styles.reviewSub}>
-              {dueCards.length > 0 ? 'Review now to strengthen memory' : 'No cards due. Keep learning!'}
-            </Text>
-          </View>
-          {dueCards.length > 0 && <Ionicons name="chevron-forward" size={16} color="#ccc" />}
-        </TouchableOpacity>
-
-        {/* Quizzes Section */}
-        <Text style={styles.sectionLabel}>QUIZZES</Text>
-        <Text style={styles.sectionTitle}>Test Your Knowledge</Text>
-        <View style={styles.quizGrid}>
-          {quizTypes.map((item) => (
-            <TouchableOpacity key={item.id} activeOpacity={0.8} onPress={() => router.push(item.route as any)} style={styles.quizCard}>
-              {item.image ? (
-                <Image source={item.image} style={styles.quizImage} />
-              ) : (
-                <View style={[styles.quizIcon, { backgroundColor: item.bgColor }]}>
-                  <Ionicons name={item.icon as any} size={22} color={item.iconColor} />
-                </View>
-              )}
-              <View style={{ flex: 1 }}>
-                <Text style={styles.quizTitle}>{item.title}</Text>
-                <Text style={styles.quizDesc}>{item.desc}</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={16} color="#ddd" />
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Practice Activities */}
-        <Text style={styles.sectionLabel}>ACTIVITIES</Text>
-        <Text style={styles.sectionTitle}>Strengthen Your Skills</Text>
-        <View style={styles.activityList}>
-          {practiceActivities.map((item) => (
-            <TouchableOpacity key={item.id} activeOpacity={0.8} onPress={() => router.push(item.route as any)} style={styles.activityRow}>
-              {item.image ? (
-                <Image source={item.image} style={styles.activityImage} />
-              ) : (
-                <View style={[styles.activityIcon, { backgroundColor: item.bgColor }]}>
-                  <Ionicons name={item.icon as any} size={18} color={item.iconColor} />
-                </View>
-              )}
-              <View style={{ flex: 1 }}>
-                <Text style={styles.activityTitle}>{item.title}</Text>
-                <Text style={styles.activityDesc}>{item.desc}</Text>
-              </View>
-              <Text style={styles.activityKorean}>{item.titleKorean}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Tools & Extras */}
-        <Text style={styles.sectionLabel}>TOOLS</Text>
-        <Text style={styles.sectionTitle}>Learning Resources</Text>
-        <View style={styles.toolsGrid}>
-          {toolsSection.map((item) => (
-            <TouchableOpacity key={item.id} activeOpacity={0.8} onPress={() => router.push(item.route as any)} style={styles.toolCard}>
-              {item.image ? (
-                <Image source={item.image} style={styles.toolImage} />
-              ) : (
-                <View style={[styles.toolIcon, { backgroundColor: item.bgColor }]}>
-                  <Ionicons name={item.icon as any} size={20} color={item.iconColor} />
-                </View>
-              )}
-              <Text style={styles.toolTitle}>{item.title}</Text>
-              <Text style={styles.toolKorean}>{item.titleKorean}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        ))}
 
         {/* Recent Quiz Results */}
         {recentResults.length > 0 && (
-          <>
-            <Text style={styles.sectionLabel}>HISTORY</Text>
-            <Text style={styles.sectionTitle}>Recent Results</Text>
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionLabel}>기록</Text>
+              <Text style={styles.sectionTitle}>Recent Results</Text>
+            </View>
             {recentResults.map((result, i) => (
               <View key={i} style={styles.resultRow}>
                 <View style={{ flex: 1 }}>
@@ -156,14 +137,14 @@ export default function PracticeScreen() {
                   <Text style={styles.resultDate}>{result.date}</Text>
                 </View>
                 <Text style={[styles.resultPct, {
-                  color: result.score / result.total >= 0.7 ? '#10b981' : '#f59e0b',
+                  color: result.score / result.total >= 0.7 ? colors.success : '#f59e0b',
                 }]}>
                   {Math.round((result.score / result.total) * 100)}%
                 </Text>
                 <Text style={styles.resultXP}>+{result.xpEarned} XP</Text>
               </View>
             ))}
-          </>
+          </View>
         )}
       </View>
     </ScrollView>
@@ -171,198 +152,93 @@ export default function PracticeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#ffffff' },
+  container: { flex: 1, backgroundColor: colors.background },
   header: {
     paddingBottom: 16,
     paddingHorizontal: 24,
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: colors.borderLight,
   },
   headerTitle: {
     fontFamily: 'Jakarta-ExtraBold',
     fontSize: 28,
-    color: '#303335',
+    color: colors.textPrimary,
   },
   headerSub: {
     fontFamily: 'Jakarta-Medium',
     fontSize: 13,
-    color: '#bbb',
+    color: colors.textTertiary,
     marginTop: 2,
   },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    gap: 8,
+  content: { paddingHorizontal: 20, paddingTop: 20, gap: 8 },
+  section: { gap: spacing.sm, marginBottom: spacing.md },
+  sectionHeader: { gap: 2, marginTop: spacing.sm },
+  sectionLabel: {
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 10,
+    color: '#ec4899',
+    letterSpacing: 1.5,
   },
+  sectionTitle: {
+    fontFamily: 'Jakarta-ExtraBold',
+    fontSize: 20,
+    color: colors.textPrimary,
+    marginBottom: 4,
+  },
+
   // Review Banner
   reviewBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 16,
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.xxl,
+    padding: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.accentLight,
     ...shadows.sm,
+    marginBottom: spacing.sm,
   },
   reviewDot: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
   reviewTitle: {
     fontFamily: 'Jakarta-Bold',
     fontSize: 14,
-    color: '#303335',
+    color: colors.textPrimary,
   },
   reviewSub: {
     fontFamily: 'Jakarta-Regular',
     fontSize: 12,
-    color: '#999',
+    color: colors.textTertiary,
     marginTop: 2,
   },
-  // Section headers
-  sectionLabel: {
-    fontFamily: 'Jakarta-Bold',
-    fontSize: 10,
-    color: '#ec4899',
-    letterSpacing: 1.5,
-    marginTop: 20,
-  },
-  sectionTitle: {
-    fontFamily: 'Jakarta-ExtraBold',
-    fontSize: 20,
-    color: '#303335',
-    marginBottom: 8,
-  },
-  // Quiz grid - horizontal rows
-  quizGrid: {
-    gap: 8,
-  },
-  quizCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 14,
-    ...shadows.sm,
-  },
-  quizIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  quizImage: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-  },
-  quizTitle: {
-    fontFamily: 'Jakarta-Bold',
-    fontSize: 15,
-    color: '#303335',
-  },
-  quizDesc: {
-    fontFamily: 'Jakarta-Regular',
-    fontSize: 12,
-    color: '#999',
-    marginTop: 1,
-  },
-  // Activity list
-  activityList: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    overflow: 'hidden',
-    ...shadows.sm,
-  },
-  activityRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 13,
-    paddingHorizontal: 16,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#f5f5f5',
-  },
-  activityIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  activityImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-  },
-  activityTitle: {
-    fontFamily: 'Jakarta-Bold',
-    fontSize: 14,
-    color: '#303335',
-  },
-  activityDesc: {
-    fontFamily: 'Jakarta-Regular',
-    fontSize: 11,
-    color: '#aaa',
-    marginTop: 1,
-  },
-  activityKorean: {
-    fontFamily: 'Jakarta-Medium',
-    fontSize: 10,
-    color: '#ccc',
-  },
-  // Tools grid
-  toolsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  toolCard: {
-    width: '47.5%' as any,
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 16,
-    alignItems: 'center',
-    gap: 6,
-    ...shadows.sm,
-  },
-  toolIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  toolImage: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-  },
-  toolTitle: {
-    fontFamily: 'Jakarta-Bold',
-    fontSize: 13,
-    color: '#303335',
-    textAlign: 'center',
-  },
-  toolKorean: {
-    fontFamily: 'Jakarta-Medium',
-    fontSize: 11,
-    color: '#bbb',
-    textAlign: 'center',
-  },
+
+  // Category cards (matches learn tab style)
+  categoryCard: { padding: 0, overflow: 'hidden' },
+  categoryGradient: { padding: spacing.lg },
+  categoryContent: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  categoryInfo: { flex: 1, gap: 2, flexShrink: 1 },
+  categoryHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  categoryTitle: { fontSize: 20, fontFamily: 'Jakarta-ExtraBold', color: '#fff' },
+  categoryKorean: { fontSize: 11, fontFamily: 'Jakarta-Medium', color: 'rgba(255,255,255,0.6)' },
+  categoryDesc: { fontSize: 12, fontFamily: 'Jakarta-Regular', color: 'rgba(255,255,255,0.8)' },
+  categoryStat: { fontSize: 12, fontFamily: 'Jakarta-Bold', color: 'rgba(255,255,255,0.9)', marginTop: 2 },
+  categoryImage: { width: 70, height: 70, borderRadius: 14 },
+
   // Results
   resultRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.xl,
     padding: 14,
     marginBottom: 6,
     ...shadows.sm,
@@ -370,13 +246,13 @@ const styles = StyleSheet.create({
   resultCategory: {
     fontFamily: 'Jakarta-Bold',
     fontSize: 14,
-    color: '#303335',
+    color: colors.textPrimary,
     textTransform: 'capitalize',
   },
   resultDate: {
     fontFamily: 'Jakarta-Regular',
     fontSize: 11,
-    color: '#999',
+    color: colors.textTertiary,
   },
   resultPct: {
     fontFamily: 'Jakarta-ExtraBold',
@@ -385,6 +261,6 @@ const styles = StyleSheet.create({
   resultXP: {
     fontFamily: 'Jakarta-Bold',
     fontSize: 11,
-    color: '#ec4899',
+    color: colors.accent,
   },
 });

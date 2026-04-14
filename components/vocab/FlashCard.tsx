@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
 import { colors, borderRadius, spacing, typography, shadows } from '@/lib/theme';
 import { VocabWord, getVocabImageUrl } from '@/data/vocabulary';
+import { getVocabImage } from '@/data/vocabImages';
 import { useAppStore } from '@/lib/store';
 import { AudioButton } from '@/components/common/AudioButton';
 import { CachedImage } from '@/components/common/CachedImage';
@@ -18,6 +19,7 @@ interface FlashCardProps {
 export function FlashCard({ word, onKnow, onDontKnow }: FlashCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const showRomanization = useAppStore((s) => s.showRomanization);
+  const localImage = getVocabImage(word.id);
 
   const flip = () => setIsFlipped(!isFlipped);
 
@@ -28,7 +30,11 @@ export function FlashCard({ word, onKnow, onDontKnow }: FlashCardProps) {
           <View style={[styles.card, styles.front]}>
             <Text style={styles.tapHint}>Tap to flip</Text>
             <AudioButton text={word.korean} size="md" style={styles.audioBtn} />
-            <CachedImage uri={getVocabImageUrl(word)} style={styles.wordImage} />
+            {localImage ? (
+              <Image source={localImage} style={styles.wordImage} />
+            ) : (
+              <CachedImage uri={getVocabImageUrl(word)} style={styles.wordImage} />
+            )}
             <Text style={styles.korean}>{word.korean}</Text>
             {showRomanization && <Text style={styles.romanization}>{word.romanization}</Text>}
             <View style={styles.badge}>
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.primary,
   },
-  wordImage: { width: 80, height: 80, borderRadius: 12, marginBottom: spacing.sm },
+  wordImage: { width: 120, height: 120, borderRadius: 16, marginBottom: spacing.sm },
   audioBtn: { position: 'absolute', top: spacing.lg, right: spacing.lg },
   tapHint: { ...typography.caption, color: colors.textTertiary, position: 'absolute', top: spacing.lg, left: spacing.lg },
   korean: { fontSize: 48, fontWeight: '300', color: colors.textPrimary, letterSpacing: 2 },

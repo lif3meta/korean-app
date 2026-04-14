@@ -48,7 +48,7 @@ export default function Onboarding() {
   const handleStart = () => {
     setUserName(name.trim() || 'Learner');
     setHasOnboarded(true);
-    router.replace('/(tabs)');
+    router.replace('/');
   };
 
   const renderSlide = ({ item, index }: { item: typeof slides[0]; index: number }) => (

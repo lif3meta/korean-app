@@ -37,16 +37,16 @@ export interface MatchingQuestion {
 
 export const quizQuestions: QuizQuestion[] = [
   // === HANGUL QUIZZES ===
-  { type: 'multiple_choice', id: 'hq_1', question: 'What sound does ㄱ make?', options: ['g/k', 'n', 'd/t', 'r/l'], correctIndex: 0, category: 'hangul', level: 'beginner', xpReward: 10 },
-  { type: 'multiple_choice', id: 'hq_2', question: 'What sound does ㅂ make?', options: ['m', 's', 'b/p', 'h'], correctIndex: 2, category: 'hangul', level: 'beginner', xpReward: 10 },
+  { type: 'multiple_choice', id: 'hq_1', question: 'What pronunciation cue do we use for ㄱ?', options: ['가', '나', '다', '라'], correctIndex: 0, category: 'hangul', level: 'beginner', xpReward: 10 },
+  { type: 'multiple_choice', id: 'hq_2', question: 'What pronunciation cue do we use for ㅂ?', options: ['마', '사', '바', '하'], correctIndex: 2, category: 'hangul', level: 'beginner', xpReward: 10 },
   { type: 'multiple_choice', id: 'hq_3', question: 'Which character is silent at the beginning of a syllable?', options: ['ㅎ', 'ㅇ', 'ㅈ', 'ㅊ'], correctIndex: 1, explanation: 'ㅇ is silent at the beginning but makes "ng" sound at the end of a syllable.', category: 'hangul', level: 'beginner', xpReward: 10 },
-  { type: 'multiple_choice', id: 'hq_4', question: 'What vowel sound does ㅏ make?', options: ['o as in go', 'a as in father', 'e as in bed', 'i as in see'], correctIndex: 1, category: 'hangul', level: 'beginner', xpReward: 10 },
+  { type: 'multiple_choice', id: 'hq_4', question: 'What pronunciation cue do we use for ㅏ?', options: ['오', '아', '에', '이'], correctIndex: 1, category: 'hangul', level: 'beginner', xpReward: 10 },
   { type: 'multiple_choice', id: 'hq_5', question: 'Which is a double consonant?', options: ['ㅋ', 'ㄲ', 'ㅊ', 'ㅍ'], correctIndex: 1, explanation: 'ㄲ is ssang giyeok (double ㄱ). ㅋ, ㅊ, ㅍ are aspirated consonants.', category: 'hangul', level: 'beginner', xpReward: 10 },
-  { type: 'multiple_choice', id: 'hq_6', question: 'What sound does ㅓ make?', options: ['ya', 'eo (as in fun)', 'o (as in go)', 'eu'], correctIndex: 1, category: 'hangul', level: 'beginner', xpReward: 10 },
-  { type: 'multiple_choice', id: 'hq_7', question: 'Which character makes the "ch" sound?', options: ['ㅈ', 'ㅊ', 'ㅋ', 'ㅌ'], correctIndex: 1, category: 'hangul', level: 'beginner', xpReward: 10 },
+  { type: 'multiple_choice', id: 'hq_6', question: 'What pronunciation cue do we use for ㅓ?', options: ['야', '어', '오', '으'], correctIndex: 1, category: 'hangul', level: 'beginner', xpReward: 10 },
+  { type: 'multiple_choice', id: 'hq_7', question: 'Which character matches the sound cue "차"?', options: ['ㅈ', 'ㅊ', 'ㅋ', 'ㅌ'], correctIndex: 1, category: 'hangul', level: 'beginner', xpReward: 10 },
   { type: 'multiple_choice', id: 'hq_8', question: 'ㅡ sounds like:', options: ['oo as in moon', 'ee as in see', 'Say "ee" but with flat, unsmiling lips', 'a as in father'], correctIndex: 2, category: 'hangul', level: 'beginner', xpReward: 10 },
-  { type: 'matching', id: 'hq_m1', instruction: 'Match the consonant to its sound', pairs: [{ left: 'ㄴ', right: 'n' }, { left: 'ㅁ', right: 'm' }, { left: 'ㅅ', right: 's' }, { left: 'ㅎ', right: 'h' }], category: 'hangul', level: 'beginner', xpReward: 20 },
-  { type: 'matching', id: 'hq_m2', instruction: 'Match the vowel to its sound', pairs: [{ left: 'ㅏ', right: 'a' }, { left: 'ㅗ', right: 'o' }, { left: 'ㅜ', right: 'u' }, { left: 'ㅣ', right: 'i' }], category: 'hangul', level: 'beginner', xpReward: 20 },
+  { type: 'matching', id: 'hq_m1', instruction: 'Match the consonant to its pronunciation cue', pairs: [{ left: 'ㄴ', right: '나' }, { left: 'ㅁ', right: '마' }, { left: 'ㅅ', right: '사' }, { left: 'ㅎ', right: '하' }], category: 'hangul', level: 'beginner', xpReward: 20 },
+  { type: 'matching', id: 'hq_m2', instruction: 'Match the vowel to its pronunciation cue', pairs: [{ left: 'ㅏ', right: '아' }, { left: 'ㅗ', right: '오' }, { left: 'ㅜ', right: '우' }, { left: 'ㅣ', right: '이' }], category: 'hangul', level: 'beginner', xpReward: 20 },
 
   // === VOCABULARY QUIZZES ===
   { type: 'multiple_choice', id: 'vq_1', question: 'What does 안녕하세요 mean?', options: ['Goodbye', 'Thank you', 'Hello', 'Sorry'], correctIndex: 2, category: 'vocab', level: 'beginner', xpReward: 15 },

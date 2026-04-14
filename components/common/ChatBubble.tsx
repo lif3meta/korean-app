@@ -1,6 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -15,9 +14,9 @@ export function ChatBubble() {
       activeOpacity={0.8}
       style={[styles.container, { bottom: 85 + insets.bottom }]}
     >
-      <LinearGradient colors={colors.gradientPrimary} style={styles.bubble}>
+      <View style={styles.bubble}>
         <Ionicons name="chatbubble-ellipses" size={26} color="#fff" />
-      </LinearGradient>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -34,6 +33,7 @@ const styles = StyleSheet.create({
     borderRadius: 29,
     alignItems: 'center',
     justifyContent: 'center',
-    ...shadows.glow,
+    backgroundColor: '#22C55E',
+    ...shadows.md,
   },
 });

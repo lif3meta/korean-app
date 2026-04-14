@@ -1,5 +1,7 @@
 export interface GrammarSection {
   heading: string;
+  /** Friendly, analogy-driven explanation a total beginner can follow. */
+  simpleExplanation?: string;
   explanation: string;
   pattern?: string;
   examples: { korean: string; english: string; romanization: string; breakdown?: { part: string; meaning: string }[] }[];

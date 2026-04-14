@@ -170,16 +170,16 @@ function MouthDiagram({
   );
 }
 
-// ─── Pollinations Mouth Image ───────────────────────────────────────────────
+// ─── Mouth Image ────────────────────────────────────────────────────────────
 
 function MouthImage({ sound, korean }: { sound: string; korean: string }) {
-  const prompt = `cute kawaii sloth character demonstrating mouth position for Korean ${korean} ${sound} sound, showing tongue placement, chibi style, pastel colors, educational illustration, simple clean background`;
-  const uri = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=200&height=200&nologo=true&model=flux`;
+  const seed = encodeURIComponent(`mouth-${korean}-${sound}`);
+  const uri = `https://api.dicebear.com/9.x/icons/png?seed=${seed}&size=200&backgroundColor=f0f0ff`;
 
   return (
     <Image
       source={{ uri }}
-      style={styles.pollinationsImage}
+      style={styles.mouthImage}
       resizeMode="cover"
     />
   );
@@ -245,7 +245,7 @@ function SoundCard({ item }: { item: TonguePosition }) {
         />
 
         <View style={styles.cardRight}>
-          <AudioButton text={item.examples[0]?.korean ?? item.korean} size="sm" color={typeColor} />
+          <AudioButton text={item.korean} size="sm" color={typeColor} audioType="hangul_sound" />
           <Ionicons
             name={expanded ? 'chevron-up' : 'chevron-down'}
             size={16}
@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
     borderTopColor: colors.borderLight,
     gap: spacing.md,
   },
-  pollinationsImage: {
+  mouthImage: {
     width: '100%',
     height: 160,
     borderRadius: borderRadius.lg,
