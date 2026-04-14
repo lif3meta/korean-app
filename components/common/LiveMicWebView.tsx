@@ -151,7 +151,7 @@ const MIC_HTML = `
             await audioContext.resume();
 
             sourceNode = audioContext.createMediaStreamSource(stream);
-            processorNode = audioContext.createScriptProcessor(4096, 1, 1);
+            processorNode = audioContext.createScriptProcessor(2048, 1, 1);
             gainNode = audioContext.createGain();
             gainNode.gain.value = 0;
 
@@ -279,6 +279,7 @@ export const LiveMicWebView = forwardRef<LiveMicWebViewHandle, Props>(function L
         mediaPlaybackRequiresUserAction={false}
         allowsInlineMediaPlayback
         mediaCapturePermissionGrantType="grant"
+        allowsAirPlayForMediaPlayback
         style={styles.webview}
       />
     </View>

@@ -172,7 +172,7 @@ export class GeminiLiveSession {
               },
             },
             outputAudioTranscription: {},
-            inputAudioTranscription: {},
+            inputAudioTranscription: { languageCode: 'ko' },
             systemInstruction: createSystemInstruction(this.systemInstruction),
           },
         }));

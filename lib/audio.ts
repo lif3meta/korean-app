@@ -57,6 +57,7 @@ export async function initAudioMode(): Promise<void> {
     await expoAudio.setAudioModeAsync({
       playsInSilentMode: true,
       interruptionMode: 'duckOthers',
+      allowsRecordingIOS: true,
     });
     _audioModeInitialized = true;
     // Pre-warm the audio player so first tap is instant
