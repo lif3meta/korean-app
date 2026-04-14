@@ -2,7 +2,7 @@
   "expo": {
     "name": "Lzy Learn Korean",
     "slug": "korean-app",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,7 +20,7 @@
         "backgroundColor": "#0f172a"
       },
       "supportsTablet": false,
-      "buildNumber": "24",
+      "buildNumber": "25",
       "bundleIdentifier": "com.hanflow.korean",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Lzy Learn Korean needs microphone access so you can practice speaking Korean and get pronunciation feedback.",

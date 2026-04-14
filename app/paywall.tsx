@@ -16,6 +16,7 @@ import {
 } from '@/lib/purchases';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const isSmallScreen = SCREEN_HEIGHT < 700;
 
 const features: { icon: keyof typeof Ionicons.glyphMap; label: string; color: string }[] = [
   { icon: 'text', label: 'Hangul Mastery', color: colors.primary },
@@ -182,72 +183,74 @@ export default function PaywallScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} bounces={false} contentContainerStyle={styles.scrollContent}>
-      {/* Hero Section */}
-      <LinearGradient
-        colors={['#fdf2f7', '#fcc9df', '#F4C2D7']}
-        style={styles.hero}
+    <View style={styles.container}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        <Image
-          source={require('@/assets/images/sloth-mascot.png')}
-          style={styles.mascot}
-        />
-        <View style={styles.speechBubble}>
-          <Text style={styles.speechText}>Let's learn Korean together!</Text>
-          <View style={styles.speechArrow} />
-        </View>
-      </LinearGradient>
-
-      {/* Main Content */}
-      <View style={styles.body}>
-        <Text style={styles.title}>Unlock Everything</Text>
-        <Text style={styles.subtitle}>
-          {trialLabel && billingLabel
-            ? `Try free for ${trialLabel}, then ${billingLabel}`
-            : billingLabel
-              ? `${billingLabel} billed through Apple`
-              : 'Monthly subscription billed through Apple'}
-        </Text>
-
-        <Text style={styles.tierCompare}>
-          Free: 10 min AI chat  {'\u2022'}  Premium: 100 min/month + all features
-        </Text>
-
-        {/* Feature Pills */}
-        <View style={styles.pillGrid}>
-          {features.map((f) => (
-            <View key={f.label} style={styles.pill}>
-              <Ionicons name={f.icon} size={16} color={f.color} />
-              <Text style={styles.pillLabel}>{f.label}</Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Pricing Card */}
+        {/* Hero Section */}
         <LinearGradient
-          colors={[colors.primary, colors.primaryDark]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.priceCard}
+          colors={['#fdf2f7', '#fcc9df', '#F4C2D7']}
+          style={styles.hero}
         >
-          <View style={styles.priceCardBadge}>
-            <Text style={styles.badgeText}>{trialLabel ? `${trialLabel.toUpperCase()} FREE` : 'MONTHLY PLAN'}</Text>
+          <Image
+            source={require('@/assets/images/sloth-mascot.png')}
+            style={styles.mascot}
+          />
+          <View style={styles.speechBubble}>
+            <Text style={styles.speechText}>Let's learn Korean together!</Text>
+            <View style={styles.speechArrow} />
           </View>
-          <Text style={styles.subscriptionTitle}>Lzy Korean Premium</Text>
-          <Text style={styles.subscriptionDuration}>Monthly Subscription</Text>
-          <Text style={styles.priceMain}>
-            {product?.displayPrice ?? 'App Store price'}
-            <Text style={styles.pricePer}>/month</Text>
-          </Text>
-          <Text style={styles.priceNote}>
-            {trialLabel
-              ? `Eligible new subscribers receive ${trialLabel} free. Cancel anytime.`
-              : 'Cancel anytime. Billing is managed by Apple.'}
-          </Text>
         </LinearGradient>
 
-        {/* Bottom Section */}
-        <View style={styles.bottomSection}>
+        {/* Main Content */}
+        <View style={styles.body}>
+          <Text style={styles.title}>Unlock Everything</Text>
+          <Text style={styles.subtitle}>
+            {trialLabel && billingLabel
+              ? `Try free for ${trialLabel}, then ${billingLabel}`
+              : billingLabel
+                ? `${billingLabel} billed through Apple`
+                : 'Monthly subscription billed through Apple'}
+          </Text>
+
+          <Text style={styles.tierCompare}>
+            Free: 10 min AI chat  {'\u2022'}  Premium: 100 min/month + all features
+          </Text>
+
+          {/* Feature Pills */}
+          <View style={styles.pillGrid}>
+            {features.map((f) => (
+              <View key={f.label} style={styles.pill}>
+                <Ionicons name={f.icon} size={14} color={f.color} />
+                <Text style={styles.pillLabel}>{f.label}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* Pricing Card */}
+          <LinearGradient
+            colors={[colors.primary, colors.primaryDark]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.priceCard}
+          >
+            <View style={styles.priceCardBadge}>
+              <Text style={styles.badgeText}>{trialLabel ? `${trialLabel.toUpperCase()} FREE` : 'MONTHLY PLAN'}</Text>
+            </View>
+            <Text style={styles.priceMain}>
+              {product?.displayPrice ?? 'App Store price'}
+              <Text style={styles.pricePer}>/month</Text>
+            </Text>
+            <Text style={styles.priceNote}>
+              {trialLabel
+                ? `Eligible new subscribers receive ${trialLabel} free. Cancel anytime.`
+                : 'Cancel anytime. Billing is managed by Apple.'}
+            </Text>
+          </LinearGradient>
+
+          {/* CTA */}
           <Button
             title={ctaTitle}
             onPress={handleSubscribe}
@@ -264,7 +267,7 @@ export default function PaywallScreen() {
 
           {subscriptionLoadFailed ? (
             <Text style={styles.statusText}>
-              We could not load the subscription from the App Store. Please try again in a moment.
+              Could not load subscription. Please try again.
             </Text>
           ) : null}
 
@@ -279,19 +282,19 @@ export default function PaywallScreen() {
 
           <Text style={styles.legal}>
             {billingLabel
-              ? `Lzy Korean Premium — ${billingLabel}. ${trialLabel ? `Eligible new subscribers may receive ${trialLabel} free before billing begins. ` : ''}Free access includes 10 minutes of AI voice chat. Premium includes 100 minutes per month. Subscription automatically renews at ${product?.displayPrice ?? 'the displayed price'}/month unless canceled at least 24 hours before the end of the current period. Payment is charged to your Apple Account at confirmation of purchase. Manage or cancel anytime in Settings > Apple Account > Subscriptions.`
-              : 'Lzy Korean Premium is billed through Apple as a monthly auto-renewable subscription. Subscription automatically renews unless canceled at least 24 hours before the end of the current period. The App Store shows the current price and any introductory offer before you confirm your purchase. Manage or cancel anytime in Settings > Apple Account > Subscriptions.'}
+              ? `Lzy Korean Premium — ${billingLabel}. ${trialLabel ? `${trialLabel} free trial for eligible subscribers. ` : ''}Auto-renews at ${product?.displayPrice ?? 'the displayed price'}/mo. Cancel anytime in Settings > Apple Account > Subscriptions.`
+              : 'Auto-renewable subscription via Apple. Cancel anytime in Settings > Apple Account > Subscriptions.'}
           </Text>
           <Text style={styles.legalLinks}>
-            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ulbmedia.com/terms/lzy-learn-korean')}>Terms of Use</Text>
+            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ulbmedia.com/terms/lzy-learn-korean')}>Terms</Text>
             {'  |  '}
-            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ulbmedia.com/privacy/lzy-learn-korean')}>Privacy Policy</Text>
+            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ulbmedia.com/privacy/lzy-learn-korean')}>Privacy</Text>
             {'  |  '}
             <Text style={styles.legalLink} onPress={() => Linking.openURL('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/')}>Apple EULA</Text>
           </Text>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -301,33 +304,33 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   scrollContent: {
-    minHeight: SCREEN_HEIGHT,
+    flexGrow: 1,
   },
 
   // Hero
   hero: {
     alignItems: 'center',
-    paddingTop: 60,
-    paddingBottom: 16,
+    paddingTop: isSmallScreen ? 44 : 52,
+    paddingBottom: isSmallScreen ? 8 : 12,
   },
   mascot: {
-    width: 130,
-    height: 130,
+    width: isSmallScreen ? 80 : 100,
+    height: isSmallScreen ? 80 : 100,
     resizeMode: 'contain',
   },
   speechBubble: {
     backgroundColor: '#fff',
     borderRadius: borderRadius.xl,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    marginTop: -4,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    marginTop: -2,
     ...shadows.md,
   },
   speechText: {
     ...typography.bodyBold,
     color: colors.primaryDark,
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: 13,
   },
   speechArrow: {
     position: 'absolute',
@@ -348,29 +351,29 @@ const styles = StyleSheet.create({
   // Body
   body: {
     flex: 1,
-    paddingHorizontal: spacing.xxl,
-    paddingTop: spacing.lg,
-    justifyContent: 'space-between',
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.sm,
   },
   title: {
     ...typography.title2,
     color: colors.textPrimary,
     textAlign: 'center',
+    fontSize: isSmallScreen ? 20 : 22,
   },
   subtitle: {
     ...typography.body,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginTop: spacing.xs,
-    fontSize: 14,
+    marginTop: 2,
+    fontSize: 13,
   },
 
   tierCompare: {
     ...typography.caption,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginTop: spacing.sm,
-    fontSize: 12,
+    marginTop: spacing.xs,
+    fontSize: 11,
   },
 
   // Feature Pills
@@ -378,111 +381,96 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: spacing.sm,
-    marginTop: spacing.md,
+    gap: spacing.xs,
+    marginTop: spacing.sm,
   },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.warmPink,
     borderRadius: borderRadius.pill,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 2,
-    gap: spacing.xs,
-  },
-  pillEmoji: {
-    fontSize: 16,
-    fontFamily: 'System',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 3,
+    gap: 3,
   },
   pillLabel: {
     ...typography.caption,
     color: colors.primaryDark,
-    fontSize: 11,
+    fontSize: 10,
   },
 
   // Price Card
   priceCard: {
-    borderRadius: borderRadius.xxl,
-    padding: spacing.xl,
+    borderRadius: borderRadius.xl,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
     alignItems: 'center',
+    marginTop: spacing.sm,
     ...shadows.glow,
     overflow: 'hidden',
   },
   priceCardBadge: {
     backgroundColor: 'rgba(255,255,255,0.25)',
     borderRadius: borderRadius.pill,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.xs,
-    marginBottom: spacing.sm,
-  },
-  subscriptionTitle: {
-    fontSize: 18,
-    fontFamily: 'Jakarta-Bold',
-    color: '#fff',
-    marginBottom: 2,
-  },
-  subscriptionDuration: {
-    fontSize: 13,
-    fontFamily: 'Jakarta-Regular',
-    color: 'rgba(255,255,255,0.7)',
-    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 2,
+    marginBottom: spacing.xs,
   },
   badgeText: {
     ...typography.captionBold,
     color: '#fff',
     letterSpacing: 1.5,
-    fontSize: 11,
+    fontSize: 10,
   },
   priceMain: {
-    fontSize: 32,
+    fontSize: isSmallScreen ? 26 : 30,
     fontFamily: 'Jakarta-ExtraBold',
     color: '#fff',
-    marginBottom: spacing.xs,
+    marginBottom: 2,
   },
   pricePer: {
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: 'Jakarta-Regular',
     color: 'rgba(255,255,255,0.8)',
   },
   priceNote: {
     ...typography.footnote,
     color: 'rgba(255,255,255,0.7)',
-    fontSize: 12,
+    fontSize: 11,
   },
 
   // Bottom
-  bottomSection: {
-    paddingBottom: spacing.xxl,
-  },
   ctaButton: {
     width: '100%',
+    marginTop: spacing.md,
     ...shadows.accentGlow,
   },
   restoreButton: {
-    marginTop: spacing.sm,
+    marginTop: spacing.xs,
     alignSelf: 'center',
   },
   statusText: {
     ...typography.body,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginTop: spacing.md,
-    fontSize: 13,
+    marginTop: spacing.sm,
+    fontSize: 12,
   },
   legal: {
     ...typography.caption,
     color: colors.textTertiary,
     textAlign: 'center',
-    marginTop: spacing.md,
-    lineHeight: 15,
-    fontSize: 10,
+    marginTop: spacing.sm,
+    lineHeight: 14,
+    fontSize: 9,
   },
   legalLinks: {
     ...typography.caption,
     color: colors.textTertiary,
     textAlign: 'center',
-    marginTop: spacing.sm,
-    fontSize: 11,
+    marginTop: spacing.xs,
+    paddingBottom: spacing.lg,
+    fontSize: 10,
   },
   legalLink: {
     color: colors.primary,
