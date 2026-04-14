@@ -9,7 +9,7 @@ function applyCors(res) {
 }
 
 async function createGeminiLiveToken() {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.EXPO_PUBLIC_GEMINI_API_KEY || '';
+  const apiKey = process.env.GEMINI_API_KEY || '';
   if (!apiKey) {
     throw new Error('Missing GEMINI_API_KEY');
   }

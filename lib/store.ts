@@ -103,6 +103,10 @@ interface AppState {
   proficiency: Record<string, CategoryProficiency>;
   updateCategoryProficiency: (category: string, correct: number, total: number) => void;
 
+  // AI Consent (Apple Guideline 5.1.2(i))
+  hasAiConsent: boolean;
+  setAiConsent: (v: boolean) => void;
+
   // Settings
   showRomanization: boolean;
   dailyGoalMinutes: number;
@@ -144,6 +148,7 @@ const initialState = {
   selectedPath: null as string | null,
   pathProgress: {} as Record<string, { stageIndex: number; lessonsCompleted: string[] }>,
   proficiency: {} as Record<string, CategoryProficiency>,
+  hasAiConsent: false,
   showRomanization: false,
   dailyGoalMinutes: 10,
   soundEnabled: true,
@@ -342,6 +347,8 @@ export const useAppStore = create<AppState>()(
         });
       },
 
+      setAiConsent: (v: boolean) => set({ hasAiConsent: v }),
+
       toggleRomanization: () => set((s: AppState) => ({ showRomanization: !s.showRomanization })),
       setDailyGoal: (minutes: number) => set({ dailyGoalMinutes: minutes }),
       toggleSound: () => set((s: AppState) => ({ soundEnabled: !s.soundEnabled })),
@@ -351,14 +358,14 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'korean-app-storage',
-      version: 2,
+      version: 3,
       storage: createJSONStorage(() => AsyncStorage),
       migrate: (persisted: any, version: number) => {
         // Version 0 (or no version) -> 1: ensure all fields have defaults
         // This runs when the stored version doesn't match the current version.
         // It merges persisted data on top of initialState so new fields get defaults
         // and existing user data is preserved.
-        if (version === 0 || version === undefined || version === 1) {
+        if (version < 3) {
           return { ...initialState, ...persisted };
         }
         return persisted;

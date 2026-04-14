@@ -600,10 +600,37 @@ export default function ChatScreen() {
     updateUserMessage,
   ]);
 
+  const hasAiConsent = useAppStore((s) => s.hasAiConsent);
+  const setAiConsent = useAppStore((s) => s.setAiConsent);
+
+  const promptAiConsent = (onConsent: () => void) => {
+    Alert.alert(
+      'AI Chat Data Sharing',
+      'This feature sends your voice and text messages to Google Gemini, a third-party AI service by Google, to generate responses. Your messages are processed by Google according to their privacy policy.\n\nYou can disable this anytime in Settings.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'I Agree',
+          onPress: () => {
+            setAiConsent(true);
+            onConsent();
+          },
+        },
+      ],
+    );
+  };
+
   const selectTeacher = (id: TeacherId) => {
-    setTeacherId(id);
-    setChatExperience('teacher');
-    setImmersiveScenarioId('cafe');
+    const startChat = () => {
+      setTeacherId(id);
+      setChatExperience('teacher');
+      setImmersiveScenarioId('cafe');
+    };
+    if (!hasAiConsent) {
+      promptAiConsent(startChat);
+    } else {
+      startChat();
+    }
   };
 
   const handlePlayMessage = (message: Message) => {

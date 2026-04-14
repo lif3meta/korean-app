@@ -212,6 +212,26 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* AI Data Sharing */}
+      <Text style={styles.sectionTitle}>AI Features</Text>
+      <View style={styles.section}>
+        <View style={styles.row}>
+          <View style={styles.rowLeft}>
+            <Ionicons name="sparkles" size={20} color={colors.accent} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.rowTitle}>AI Chat Data Sharing</Text>
+              <Text style={styles.rowSub}>Send voice and text to Google Gemini for AI teacher chat</Text>
+            </View>
+          </View>
+          <Switch
+            value={store.hasAiConsent}
+            onValueChange={(v) => store.setAiConsent(v)}
+            trackColor={{ false: colors.border, true: colors.accentLight }}
+            thumbColor={store.hasAiConsent ? colors.accent : colors.textTertiary}
+          />
+        </View>
+      </View>
+
       {/* Danger Zone */}
       <Text style={styles.sectionTitle}>Data</Text>
       <View style={styles.section}>
