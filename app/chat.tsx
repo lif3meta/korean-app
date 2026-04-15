@@ -559,7 +559,8 @@ export default function ChatScreen() {
         onInputTranscript: (text) => {
           if (cancelled || !text) return;
           pendingUserTranscriptRef.current = mergeTranscriptChunk(pendingUserTranscriptRef.current, text);
-          updateUserMessage(pendingUserTranscriptRef.current);
+          // Don't show raw transcription — it often misidentifies Korean as other languages.
+          // The user message bubble shows a wave animation while recording instead.
         },
         onAudioChunk: (base64Pcm, mimeType) => {
           if (cancelled) return;
@@ -949,6 +950,7 @@ export default function ChatScreen() {
     const isUser = item.role === 'user';
     const isPlaying = playingId === item.id;
     const hasAudio = Boolean(assistantAudioRef.current[item.id]?.chunks?.length);
+    const isRecordingMessage = isUser && item.content === '~~~RECORDING~~~';
 
     return (
       <View style={[styles.messageBubbleRow, isUser ? styles.userRow : styles.assistantRow]}>
@@ -965,9 +967,18 @@ export default function ChatScreen() {
           >
             <View style={[styles.messageBubble, isUser ? styles.userBubble : styles.assistantBubble, isPlaying && styles.playingBubble]}>
               {!isUser && <Text style={styles.senderName}>{t.name}</Text>}
-              <Text style={[styles.messageText, isUser ? styles.userText : styles.assistantText]}>
-                {item.content || '...'}
-              </Text>
+              {isRecordingMessage ? (
+                <View style={styles.waveContainer}>
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <View key={i} style={[styles.waveBar, { height: [12, 20, 16, 22, 14][i], opacity: 0.6 + (i % 2) * 0.4 }]} />
+                  ))}
+                  <Text style={[styles.messageText, styles.userText, { marginLeft: 6 }]}>Listening...</Text>
+                </View>
+              ) : (
+                <Text style={[styles.messageText, isUser ? styles.userText : styles.assistantText]}>
+                  {item.content || '...'}
+                </Text>
+              )}
             </View>
           </TouchableOpacity>
           {!isUser && hasAudio && (
@@ -1212,10 +1223,18 @@ export default function ChatScreen() {
         onStart={() => {
           startVoiceUsageTracking();
           setIsRecording(true);
+          ensureUserMessage();
+          updateUserMessage('~~~RECORDING~~~');
         }}
         onStop={() => {
           stopVoiceUsageTracking();
           setIsRecording(false);
+          const transcript = pendingUserTranscriptRef.current.trim();
+          if (transcript) {
+            updateUserMessage(transcript);
+          } else {
+            updateUserMessage('🎙️');
+          }
         }}
         onError={(message) => {
           stopVoiceUsageTracking();
@@ -1315,6 +1334,8 @@ const styles = StyleSheet.create({
   senderName: { fontSize: 10, fontFamily: 'Poppins-Bold', color: colors.primary, marginBottom: 2 },
   messageText: { fontSize: 15, fontFamily: 'Poppins-Regular', lineHeight: 22 },
   userText: { color: '#fff' },
+  waveContainer: { flexDirection: 'row', alignItems: 'center', paddingVertical: 2 },
+  waveBar: { width: 3, borderRadius: 2, backgroundColor: '#fff', marginHorizontal: 1.5 },
   assistantText: { color: colors.textPrimary },
   playBtn: { flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 3, marginLeft: spacing.xs },
   playBtnMuted: { opacity: 0.7 },
